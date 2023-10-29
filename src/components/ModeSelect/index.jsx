@@ -25,6 +25,9 @@ function ModeSelect() {
         value={mode}
         label="Mode"
         onChange={handleChange}
+        sx={{
+          '.MuiSvgIcon-root':{ color: 'primary.main' }
+        }}
       >
 
         <MenuItem value="light">
