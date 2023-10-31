@@ -9,43 +9,39 @@ import AttachmentIcon from '@mui/icons-material/Attachment'
 import Typography from '@mui/material/Typography'
 import Button from '@mui/material/Button'
 
-function TrelloCard({ temporaryHidenMedia }) {
-  if (temporaryHidenMedia)
-    return ( <Card sx={{
-      cursor:'pointer',
-      boxShadow: '0 1px 1px rgba(0,0,0,0.2)',
-      overflow: 'unset'
-    }}>
-      <CardContent
-        sx={{
-          p: 1.5,
-          '&:last-child':{ p :1.5 }
-        }}>
-        <Typography >Thanh</Typography>
-      </CardContent>
-    </Card>)
+function TrelloCard({ card }) {
+  const shouldShowCardActopms = () => {
+    return !!card?.memberIds?.length || !!card?.comments?.length || !!card?.attachments?.length
+  }
   return (
     <Card sx={{
       cursor:'pointer',
       boxShadow: '0 1px 1px rgba(0,0,0,0.2)',
       overflow: 'unset'
     }}>
+      {card?.cover &&
       <CardMedia
         sx={{ height: 140 }}
-        image="/static/images/cards/contemplative-reptile.jpg"
+        image={card?.cover}
         title="green iguana"
       />
+      }
       <CardContent sx={{
         p: 1.5,
         '&:last-child':{ p :1.5 }
       }}>
-        <Typography>Dev Thanh</Typography>
+        <Typography>{card?.title}</Typography>
       </CardContent>
-      <CardActions>
-        <Button size="small" startIcon= {<GroupIcon/>}>20</Button>
-        <Button size="small" startIcon= {<CommentIcon/>}>20</Button>
-        <Button size="small" startIcon= {<AttachmentIcon/>}>20</Button>
+      {shouldShowCardActopms() &&
+      <CardActions sx={{ p: '0 4px 8px 4px' }}>
+        {!!card?.memberIds?.length &&
+          <Button size="small" startIcon= {<GroupIcon/>}>{card?.memberIds?.length}</Button>}
+        {!!card?.comments?.length &&
+          <Button size="small" startIcon= {<CommentIcon/>}>{card?.comments?.length}</Button>}
+        {!!card?.attachments?.length &&
+          <Button size="small" startIcon= {<AttachmentIcon/>}>{card?.attachments?.length}</Button>}
       </CardActions>
+      }
     </Card>
   )
 }

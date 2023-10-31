@@ -19,7 +19,7 @@ const theme = extendTheme({
   colorSchemes: {
     light: {
       palette: {
-        primary: red,
+        primary: teal,
         secondary: deepOrange
       }
     }
