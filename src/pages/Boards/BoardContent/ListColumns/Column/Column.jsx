@@ -16,7 +16,6 @@ import Tooltip from '@mui/material/Tooltip'
 import DeleteIcon from '@mui/icons-material/Delete'
 import AddCardIcon from '@mui/icons-material/AddCard'
 import DragHandleIcon from '@mui/icons-material/DragHandle'
-import { grey } from '@mui/material/colors'
 import ListCards from './ListCards/ListCards'
 import { mapOrder } from '~/utils/sorts'
 import { useSortable } from '@dnd-kit/sortable'
@@ -56,7 +55,7 @@ function Column({ column }) {
       sx={{
         minWidth: '300px',
         maxWidth: '300px',
-        bgcolor: grey[300], //(theme) => (theme.palette.mode === 'dark' ? '#333643' : 'ebecf0')
+        bgcolor: (theme) => theme.palette.secondary.main,
         ml: 2,
         borderRadius: '6px',
         height: 'fit-content',

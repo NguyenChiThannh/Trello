@@ -13,18 +13,7 @@ import PersonAddIcon from '@mui/icons-material/PersonAdd'
 import { capitalizeFirstLetter } from '~/utils/formatters'
 
 
-const MENU_STYLES ={
-  color: 'primary.main',
-  bgcolor: 'white',
-  padding: '4px',
-  '& .MuiSvgIcon-root':{
-    color: 'primary.main'
-  },
-  '&:hover':{
-    bgcolor: 'primary.50'
-  }
-}
-function BoardBar({board}) {
+function BoardBar({ board }) {
   // const {board} = props
   // const board = props.board
   return (
@@ -41,32 +30,32 @@ function BoardBar({board}) {
     }}>
       <Box sx={{ display:'flex', alignItems:'center', gap :2 }}>
         <Chip
-          sx={MENU_STYLES}
+          sx={{}}
           avatar={<Avatar alt="Natacha" src='https://scontent.fsgn2-8.fna.fbcdn.net/v/t39.30808-6/324591512_1312799499497815_4509213548081146860_n.jpg?_nc_cat=102&ccb=1-7&_nc_sid=5f2048&_nc_eui2=AeHxw31PKwrgSslZZ2Qdzovzb6ypziWItc1vrKnOJYi1zSQ_Scv0M4oPXA5nhPRHcPRxoZK-RDh2F_1Za0aqgYQv&_nc_ohc=ZNvCY9yGsa8AX8WNCU6&_nc_ht=scontent.fsgn2-8.fna&oh=00_AfB5JBNDZxQdAPilzgABSs5oLHy7UoZ3z98TvAK57mih9Q&oe=65403728'
           />}
           label={board?.title}
           clickable
         />
         <Chip
-          sx={MENU_STYLES}
+          sx={{}}
           icon={<VpnLockIcon />}
           label={capitalizeFirstLetter(board?.type)}
           clickable
         />
         <Chip
-          sx={MENU_STYLES}
+          sx={{}}
           icon={<AddToDriveIcon />}
           label="Add To Google Drive"
           clickable
         />
         <Chip
-          sx={MENU_STYLES}
+          sx={{}}
           icon={<BoltIcon />}
           label="Automation"
           clickable
         />
         <Chip
-          sx={MENU_STYLES}
+          sx={{}}
           icon={<FilterListIcon />}
           label="Filter"
           clickable

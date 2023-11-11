@@ -30,7 +30,7 @@ function ListColumns({ columns }) {
             height: 'fit-content',
             borderRadius: '8px',
             mx: 2,
-            bgcolor: grey[200]
+            bgcolor: (theme) => theme.palette.secondary.main
           }}
         >
           <Button

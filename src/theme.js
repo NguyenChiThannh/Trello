@@ -1,4 +1,4 @@
-import { red, cyan, deepOrange, orange, teal } from '@mui/material/colors'
+import { red, grey, teal } from '@mui/material/colors'
 import { experimental_extendTheme as extendTheme } from '@mui/material/styles'
 
 const APP_BAR_HEIGHT = '58px'
@@ -20,14 +20,20 @@ const theme = extendTheme({
     light: {
       palette: {
         primary: teal,
-        secondary: deepOrange
+        secondary: {
+          main: grey[300]
+        }
       }
-    }
-  },
-  dark: {
-    palette: {
-      primary: red,
-      secondary: orange
+    },
+    dark: {
+      palette: {
+        primary: {
+          main: '#89CFF3' //8FD6E1
+        },
+        secondary: {
+          main: '#546e7a'
+        }
+      }
     }
   },
   components: {
@@ -49,6 +55,30 @@ const theme = extendTheme({
         }
       }
     },
+    MuiButtonBase:{
+      styleOverrides: {
+        root: ({ theme }) => ({
+          color: theme.palette.primary.main
+        })
+      }
+    },
+    MuiChip:{
+      styleOverrides: {
+        icon: ({ theme }) => ({
+          color: theme.palette.primary.main
+        }),
+        root: ({ theme }) => ({
+          color: theme.palette.primary.main
+        })
+      }
+    },
+    MuiSvgIcon:{
+      styleOverrides: {
+        root: ({ theme }) => ({
+          color: theme.palette.primary.main
+        })
+      }
+    },
     MuiButton: {
       styleOverrides: {
         root: {
@@ -68,7 +98,8 @@ const theme = extendTheme({
         root:{
           '&.MuiTypography-body1': { fontSize: '0.875rem' }
         }
-      } },
+      }
+    },
     MuiOutlinedInput: {
       styleOverrides: {
         root: ({ theme }) => ({

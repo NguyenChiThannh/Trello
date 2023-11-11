@@ -26,7 +26,7 @@ function ModeSelect() {
         label="Mode"
         onChange={handleChange}
         sx={{
-          '.MuiSvgIcon-root':{ color: 'primary.main' }
+          '& .MuiSvgIcon-root':{ color: 'primary.main' }
         }}
       >
 

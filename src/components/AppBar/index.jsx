@@ -16,6 +16,8 @@ import NotificationsNoneIcon from '@mui/icons-material/NotificationsNone'
 import Tooltip from '@mui/material/Tooltip'
 import HelpOutlineIcon from '@mui/icons-material/HelpOutline'
 import Profiles from './Menus/Profiles'
+import { red } from '@mui/material/colors'
+
 
 function AppBar() {
   return (
@@ -47,7 +49,7 @@ function AppBar() {
         <TextField id="outlined-search" label="Search" type="search" size='small' sx={{ minWidth: '120px' }}/>
         <ModeSelect/>
         <Tooltip title="Notification">
-          <Badge color="secondary" variant="dot" sx={{ cursor:'pointer' }}>
+          <Badge color="error" variant="dot" sx={{ cursor:'pointer' }} >
             <NotificationsNoneIcon sx={{ color: 'primary.main' }}/>
           </Badge>
         </Tooltip>
