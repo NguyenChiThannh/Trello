@@ -8,17 +8,40 @@ import CommentIcon from '@mui/icons-material/Comment'
 import AttachmentIcon from '@mui/icons-material/Attachment'
 import Typography from '@mui/material/Typography'
 import Button from '@mui/material/Button'
+import { useSortable } from '@dnd-kit/sortable'
+import { CSS } from '@dnd-kit/utilities'
 
 function TrelloCard({ card }) {
+  // drag
+  const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({
+    id: card._id,
+    data: { ...card }
+  })
+
+  const dndKitCardStyle = {
+    //touchAction: 'none',
+    // Nếu dùng CSS.Transform như docs sẽ bị lỗi
+    // https://github.com/clauderic/dnd-kit/issues/117
+    transform: CSS.Translate.toString(transform), // Transform nó bị méo khi kéo cột, nên dùng Translate
+    transition,
+    opacity: isDragging ? 0.5 : undefined
+
+  }
+
   const shouldShowCardActopms = () => {
     return !!card?.memberIds?.length || !!card?.comments?.length || !!card?.attachments?.length
   }
   return (
-    <Card sx={{
-      cursor:'pointer',
-      boxShadow: '0 1px 1px rgba(0,0,0,0.2)',
-      overflow: 'unset'
-    }}>
+    <Card
+      ref={setNodeRef}
+      style={dndKitCardStyle}
+      {...attributes}
+      {...listeners}
+      sx={{
+        cursor:'pointer',
+        boxShadow: '0 1px 1px rgba(0,0,0,0.2)',
+        overflow: 'unset'
+      }}>
       {card?.cover &&
       <CardMedia
         sx={{ height: 140 }}
