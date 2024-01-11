@@ -17,7 +17,8 @@ import { useEffect, useState } from 'react'
 import { arrayMove } from '@dnd-kit/sortable'
 import Column from './ListColumns/Column/Column'
 import Card from './ListColumns/Column/ListCards/Card/Card'
-import { cloneDeep } from 'lodash'
+import { cloneDeep, isEmpty } from 'lodash'
+import { generatePlaceholderCard } from '~/utils/formatters'
 
 const ACTIVE_DRAG_ITEM_TYPE ={
   COLUMN: 'ACTIVE_DRAG_ITEM_TYPE_COLUMN',
@@ -47,9 +48,9 @@ function BoardContent({ board }) {
   const mySensors = useSensors(touchSensor, mouseSensor)
   const [orderedColumnsState, setOrderedColumnsState] = useState([])
 
-  const [activeDragItemId, setactiveDragItemId] = useState(null)
-  const [activeDragItemType, setactiveDragItemType] = useState(null)
-  const [activeDragItemData, setactiveDragItemData] = useState(null)
+  const [activeDragItemId, setActiveDragItemId] = useState(null)
+  const [activeDragItemType, setActiveDragItemType] = useState(null)
+  const [activeDragItemData, setActiveDragItemData] = useState(null)
   const [oldColumnWhenDraggingCard, setOldColumnWhenDraggingCard] = useState(null)
 
 
@@ -93,6 +94,12 @@ function BoardContent({ board }) {
         // Xóa card ở cái column active (xóa card ở column cũ, để nó sang column khác)
         nextActiveColumn.cards = nextActiveColumn.cards.filter(card => card._id !== activeDragingCardId)
 
+        // Thêm Placeholder Card nếu Column rỗng: Bị kéo hết card đi, không còn cái nào nữa
+
+        if (isEmpty(nextActiveColumn.cards)) {
+          nextActiveColumn.cards = [generatePlaceholderCard(nextActiveColumn)]
+        }
+
         // Cập nhật lại mảng cardOrderIds cho chuẩn dữ liệu
         nextActiveColumn.cardOrderIds = nextActiveColumn.cards.map(card => card._id)
       }
@@ -107,6 +114,10 @@ function BoardContent({ board }) {
         }
         //Tiếp theo là thêm cái card vào overColum theo vị trí mới
         nextOverColumn.cards = nextOverColumn.cards.toSpliced(newCardIndex, 0, rebuild_activeDraggingCardData)
+
+        // Xóa cái Placeholder Card đi nếu nó đang tồn tại 
+        nextOverColumn.cards = nextOverColumn.cards.filter(card => !card.FE_PlaceholderCard)
+
         // Cập nhật lại mảng cardOrderIds cho chuẩn dữ liệu
         nextOverColumn.cardOrderIds = nextOverColumn.cards.map(card => card._id)
       }
@@ -115,9 +126,9 @@ function BoardContent({ board }) {
     })
   }
   const handleDragStart = (event) => {
-    setactiveDragItemId(event?.active?.id)
-    setactiveDragItemType(event?.active?.data?.current?.columnId ? ACTIVE_DRAG_ITEM_TYPE.CARD : ACTIVE_DRAG_ITEM_TYPE.COLUMN)
-    setactiveDragItemData(event?.active?.data?.current)
+    setActiveDragItemId(event?.active?.id)
+    setActiveDragItemType(event?.active?.data?.current?.columnId ? ACTIVE_DRAG_ITEM_TYPE.CARD : ACTIVE_DRAG_ITEM_TYPE.COLUMN)
+    setActiveDragItemData(event?.active?.data?.current)
 
     // Nếu kéo card thì mới thực hiện hành động kéo oldColumn
     if (event?.active?.data?.current?.columnId) {
@@ -222,9 +233,9 @@ function BoardContent({ board }) {
       }
     }
 
-    setactiveDragItemId(null)
-    setactiveDragItemType(null)
-    setactiveDragItemData(null)
+    setActiveDragItemId(null)
+    setActiveDragItemType(null)
+    setActiveDragItemData(null)
     setOldColumnWhenDraggingCard(null)
   }
 
