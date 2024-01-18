@@ -16,10 +16,14 @@ import NotificationsNoneIcon from '@mui/icons-material/NotificationsNone'
 import Tooltip from '@mui/material/Tooltip'
 import HelpOutlineIcon from '@mui/icons-material/HelpOutline'
 import Profiles from './Menus/Profiles'
-import { red } from '@mui/material/colors'
+import InputAdornment from '@mui/material/InputAdornment'
+import CloseIcon from '@mui/icons-material/Close'
+import { useState } from 'react'
+import SearchIcon from '@mui/icons-material/Search'
 
 
 function AppBar() {
+  const [searchValue, setSearchValue] = useState('')
   return (
     <Box sx={{
       width:'100%',
@@ -32,10 +36,10 @@ function AppBar() {
       overflowX: 'auto'
     }}>
       <Box sx={{ display:'flex', alignItems:'center', gap :2 }}>
-        <AppsIcon sx={{ color:'primary.main' }}/>
+        <AppsIcon sx={{ color:(theme) => theme.palette.primary.main }}/>
         <Box sx={{ display:'flex', alignItems:'center', gap :0.5 }}>
-          <SvgIcon component={TrelloIcon} inheritViewBox sx={{ color: 'primary.main' }}/>
-          <Typography variant="span" sx={{ fontSize:'1.2rem', fontWeight:'bold', color:'primary.main' }}>Trelle</Typography>
+          <SvgIcon component={TrelloIcon} inheritViewBox sx={{ color: (theme) => theme.palette.primary.main }}/>
+          <Typography variant="span" sx={{ fontSize:'1.2rem', fontWeight:'bold', color:(theme) => theme.palette.primary.main }}>Trelle</Typography>
         </Box>
         <Box sx={{ display:{ xs:'none', md: 'flex' }, gap: 1 }}>
           <Workspaces/>
@@ -46,15 +50,29 @@ function AppBar() {
         </Box>
       </Box>
       <Box sx={{ display:'flex', alignItems:'center', gap :2 }}>
-        <TextField id="outlined-search" label="Search" type="search" size='small' sx={{ minWidth: '120px' }}/>
+        <TextField
+          id="outlined-search"
+          label="Search"
+          type="search"
+          size='small'
+          value={searchValue}
+          onChange={(e) => setSearchValue(e.target.value)}
+          InputProps={{
+            startAdornment: (
+              <InputAdornment position="start">
+                <SearchIcon />
+              </InputAdornment>
+            ),
+          }}
+        />
         <ModeSelect/>
         <Tooltip title="Notification">
           <Badge color="error" variant="dot" sx={{ cursor:'pointer' }} >
-            <NotificationsNoneIcon sx={{ color: 'primary.main' }}/>
+            <NotificationsNoneIcon sx={{ color: (theme) => theme.palette.primary.main }}/>
           </Badge>
         </Tooltip>
         <Tooltip title="Help">
-          <HelpOutlineIcon sx={{ color: 'primary.main' }}/>
+          <HelpOutlineIcon sx={{ color: (theme) => theme.palette.primary.main }}/>
         </Tooltip>
         <Profiles/>
       </Box>

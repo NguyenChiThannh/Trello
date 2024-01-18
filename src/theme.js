@@ -1,4 +1,4 @@
-import { red, grey, teal } from '@mui/material/colors'
+import { grey, teal } from '@mui/material/colors'
 import { experimental_extendTheme as extendTheme } from '@mui/material/styles'
 
 const APP_BAR_HEIGHT = '58px'
@@ -20,6 +20,9 @@ const theme = extendTheme({
     light: {
       palette: {
         primary: teal,
+        // primary: {
+        //   main: teal[500],
+        // }, // nếu dùng main kiểu này thì phải thêm giá trị [] đằng sau
         secondary: {
           main: grey[300]
         }

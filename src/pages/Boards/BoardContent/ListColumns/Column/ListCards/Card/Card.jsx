@@ -10,6 +10,7 @@ import Typography from '@mui/material/Typography'
 import Button from '@mui/material/Button'
 import { useSortable } from '@dnd-kit/sortable'
 import { CSS } from '@dnd-kit/utilities'
+import theme from '~/theme'
 
 function TrelloCard({ card }) {
   // drag
@@ -44,7 +45,9 @@ function TrelloCard({ card }) {
         opacity: card.FE_PlaceholderCard ? '0' : '1',
         minWidth: card.FE_PlaceholderCard ? '280px' : 'unset',
         pointerEvents: card.FE_PlaceholderCard ? 'none' : 'unset',
-        position: card.FE_PlaceholderCard ? 'fixed' : 'unset'
+        position: card.FE_PlaceholderCard ? 'fixed' : 'unset',
+        border: '1px solid transparent',
+        '&:hover': { borderColor: (theme) => theme.palette.primary.main }
 
       }}>
       {card?.cover &&

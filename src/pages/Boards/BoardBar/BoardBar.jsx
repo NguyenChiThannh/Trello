@@ -29,13 +29,15 @@ function BoardBar({ board }) {
       borderTop:(theme) => `1.5px solid ${theme.palette.primary.main}`
     }}>
       <Box sx={{ display:'flex', alignItems:'center', gap :2 }}>
-        <Chip
-          sx={{}}
-          avatar={<Avatar alt="Natacha" src='https://scontent.fsgn2-8.fna.fbcdn.net/v/t39.30808-6/324591512_1312799499497815_4509213548081146860_n.jpg?_nc_cat=102&ccb=1-7&_nc_sid=5f2048&_nc_eui2=AeHxw31PKwrgSslZZ2Qdzovzb6ypziWItc1vrKnOJYi1zSQ_Scv0M4oPXA5nhPRHcPRxoZK-RDh2F_1Za0aqgYQv&_nc_ohc=ZNvCY9yGsa8AX8WNCU6&_nc_ht=scontent.fsgn2-8.fna&oh=00_AfB5JBNDZxQdAPilzgABSs5oLHy7UoZ3z98TvAK57mih9Q&oe=65403728'
-          />}
-          label={board?.title}
-          clickable
-        />
+        <Tooltip title={board?.description}>
+          <Chip
+            sx={{}}
+            avatar={<Avatar alt="Natacha" src='https://scontent.fsgn2-8.fna.fbcdn.net/v/t39.30808-6/324591512_1312799499497815_4509213548081146860_n.jpg?_nc_cat=102&ccb=1-7&_nc_sid=5f2048&_nc_eui2=AeHxw31PKwrgSslZZ2Qdzovzb6ypziWItc1vrKnOJYi1zSQ_Scv0M4oPXA5nhPRHcPRxoZK-RDh2F_1Za0aqgYQv&_nc_ohc=ZNvCY9yGsa8AX8WNCU6&_nc_ht=scontent.fsgn2-8.fna&oh=00_AfB5JBNDZxQdAPilzgABSs5oLHy7UoZ3z98TvAK57mih9Q&oe=65403728'
+            />}
+            label={board?.title}
+            clickable
+          />
+        </Tooltip>
         <Chip
           sx={{}}
           icon={<VpnLockIcon />}
