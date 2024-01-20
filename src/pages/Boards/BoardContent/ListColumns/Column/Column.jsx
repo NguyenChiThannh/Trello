@@ -26,7 +26,7 @@ import CloseIcon from '@mui/icons-material/Close'
 import { useColorScheme } from '@mui/material'
 import { toast } from 'react-toastify'
 
-function Column({ column }) {
+function Column({ column, createNewCard }) {
   // drag
   const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({
     id: column._id,
@@ -59,12 +59,20 @@ function Column({ column }) {
   const [newCardTitle, setNewCardTitle] = useState('')
   const { mode } = useColorScheme()
 
-  const addNewCard = () => {
+  const addNewCard = async () => {
     if (!newCardTitle) {
       toast.error('Please Enter Column Title', { theme: mode })
       return
     }
     //Gọi API
+    const newCardData = {
+      title: newCardTitle,
+      columnId: column._id
+    }
+
+    //console.log(newCardTitle)
+    // Sử dụng redux thì sẽ chuẩn chỉnh ở chỗ này hơn
+    await createNewCard(newCardData)
 
     //Đóng trạng thái thêm column và clear input
     toggleOpenNewCardForm()

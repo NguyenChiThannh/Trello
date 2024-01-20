@@ -9,18 +9,24 @@ import CloseIcon from '@mui/icons-material/Close'
 import { toast } from 'react-toastify'
 import { useColorScheme } from '@mui/material'
 
-function ListColumns({ columns }) {
+function ListColumns({ columns, createNewColumn, createNewCard }) {
   const [openNewColumnForm, setOpenNewColumnForm] = useState(false)
   const toggleOpenNewColumnForm = () => setOpenNewColumnForm(!openNewColumnForm)
   const [newColumnTitle, setNewColumnTitle] = useState('')
   const { mode } = useColorScheme()
 
-  const addNewColumn = () => {
+  const addNewColumn = async () => {
     if (!newColumnTitle) {
       toast.error('Please Enter Column Title', { theme: mode })
       return
     }
-    //Gọi API
+    // Tạo dữ liệu Column để gọi API
+    const newColumnData = {
+      title: newColumnTitle,
+    }
+
+    // Sử dụng redux thì sẽ chuẩn chỉnh ở chỗ này hơn
+    await createNewColumn(newColumnData)
 
     //Đóng trạng thái thêm column và clear input
     toggleOpenNewColumnForm()
@@ -41,7 +47,7 @@ function ListColumns({ columns }) {
         overflowY: 'hidden'
       }}>
         {columns?.map((column) => {
-          return (<Column key={column._id} column={column}/>)
+          return (<Column key={column._id} column={column} createNewCard={createNewCard}/>)
         })}
         {/* Box Add new column */}
         {!openNewColumnForm
