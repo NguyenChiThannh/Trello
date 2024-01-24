@@ -13,16 +13,19 @@ import { fetchBoardDetailsAPI,
   updatedAtBoardDetailsAPI,
   updatedAtColumnDetailsAPI,
   moveCardToDifferentColumnAPI,
+  deleteColumnDetailsAPI,
 } from '~/apis'
 import { generatePlaceholderCard } from '~/utils/formatters'
 import { isEmpty } from 'lodash'
 import { mapOrder } from '~/utils/sorts'
+import { toast } from 'react-toastify'
+import { useColorScheme } from '@mui/material'
 import CircularProgress from '@mui/material/CircularProgress'
 import Box from '@mui/material/Box'
 
-
 function Board() {
   const [board, setBoard] = useState(null)
+  const { mode } = useColorScheme()
 
   useEffect(() => {
     //react-route-dom
@@ -149,7 +152,19 @@ function Board() {
       nextCardOrderIds: dndOrderedColumns.find(c => c._id === nextColumnId)?.cardOrderIds,
     })
   }
+  const deleteColumnDetails = async (columnId) => {
+    // Update xử lý boardState
 
+    const newBoard = { ...board }
+    newBoard.columns = newBoard.columns.filter(c => c._id !== columnId)
+    newBoard.columnOrderIds = newBoard.columnOrderIds.filter(_id => _id !== columnId)
+    setBoard(newBoard)
+    // Gọi API phía BE
+    deleteColumnDetailsAPI(columnId).then(() => {
+      toast.success('Delete Column Success', { theme: mode })
+    })
+  }
+  // Xử lý xóa column và cards bên trong nó 
   // Progress
   // if (!board) {
   //   return (
@@ -171,6 +186,7 @@ function Board() {
         moveColumns={moveColumns}
         moveCardInTheSameColumn={moveCardInTheSameColumn}
         moveCardToDifferentColumn={moveCardToDifferentColumn}
+        deleteColumnDetails={deleteColumnDetails}
       />
     </Container>
   )

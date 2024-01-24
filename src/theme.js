@@ -34,7 +34,7 @@ const theme = extendTheme({
           main: '#89CFF3' //8FD6E1
         },
         secondary: {
-          main: '#546e7a'
+          main: '#31384a' //546e7a
         }
       }
     }
@@ -50,7 +50,7 @@ const theme = extendTheme({
           },
           '*::-webkit-scrollbar-thumb':{
             borderRadius: '8px',
-            backgroundColor: (theme) => theme.palette.palette.main
+            backgroundColor: (theme) => theme.palette.primary.main
           },
           '*::-webkit-scrollbar-thumb:hover':{
             backgroundColor:'white'
