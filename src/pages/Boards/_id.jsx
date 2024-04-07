@@ -5,7 +5,7 @@ import AppBar from '~/components/AppBar'
 import BoardBar from './BoardBar/BoardBar'
 import BoardContent from './BoardContent/BoardContent'
 
-// import { mockData } from '~/apis/mock-data'
+import { mockData } from '~/apis/mock-data'
 import { useEffect, useState } from 'react'
 import { fetchBoardDetailsAPI,
   createNewColumnAPI,
@@ -164,7 +164,7 @@ function Board() {
       toast.success('Delete Column Success', { theme: mode })
     })
   }
-  // Xử lý xóa column và cards bên trong nó 
+  // Xử lý xóa column và cards bên trong nó
   // Progress
   // if (!board) {
   //   return (
@@ -181,6 +181,7 @@ function Board() {
       <BoardBar board ={board}/>
       <BoardContent
         board ={board}
+
         createNewColumn={createNewColumn}
         createNewCard={createNewCard}
         moveColumns={moveColumns}

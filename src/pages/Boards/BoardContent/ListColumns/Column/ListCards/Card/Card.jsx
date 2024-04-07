@@ -10,7 +10,6 @@ import Typography from '@mui/material/Typography'
 import Button from '@mui/material/Button'
 import { useSortable } from '@dnd-kit/sortable'
 import { CSS } from '@dnd-kit/utilities'
-import theme from '~/theme'
 
 function TrelloCard({ card }) {
   // drag
