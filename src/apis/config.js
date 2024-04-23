@@ -1,21 +1,13 @@
 import axios from 'axios'
+import { toast } from 'react-toastify'
+import { API_ROOT } from '~/utils/constants'
 
-// Add a request interceptor
-export const axiosReq = axios.interceptors.request.use(async (config) => {
-  // Do something before request is sent
-  return config
-}, function (error) {
-  // Do something with request error
-  return Promise.reject(error)
+export const axiosInstance = axios.create({
+  baseURL: API_ROOT,
+  timeout: 30000, // timeout in 3s
+  headers: {
+    'Content-Type': 'application/json'
+  },
+  withCredentials: true // Cho phép gửi cokiee cùng với http
 })
 
-// Add a response interceptor
-export const axiosRes = axios.interceptors.response.use(async (response) => {
-  // Any status code that lie within the range of 2xx cause this function to trigger
-  // Do something with response data
-  return response
-}, function (error) {
-  // Any status codes that falls outside the range of 2xx cause this function to trigger
-  // Do something with response error
-  return Promise.reject(error)
-})

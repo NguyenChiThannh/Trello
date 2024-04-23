@@ -1,7 +1,5 @@
 import axios, { formToJSON } from 'axios'
-import { loginStart, loginSucess } from '~/redux/authSlice'
 import { API_ROOT } from '~/utils/constants'
-import { axiosRes, axiosReq } from './config'
 
 // Boards
 export const fetchBoardDetailsAPI = async (boardId) => {

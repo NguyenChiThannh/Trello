@@ -21,9 +21,10 @@ import { useColorScheme } from '@mui/material'
 
 
 import Box from '@mui/material/Box'
+import { registerUser } from '~/apis/auth'
+import { API_ROOT } from '~/utils/constants'
 
 function Register() {
-  const [username, setUsername] = useState('')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [repeatPassword, setRepeatPassword] = useState('')
@@ -44,6 +45,9 @@ function Register() {
       /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
     )
   }
+  const google = () => {
+    window.open(`${API_ROOT}/v1/auth/google`, '_self')
+  }
 
   const handleMouseDownPassword = (event) => {
     event.preventDefault()
@@ -52,18 +56,22 @@ function Register() {
 
   const handleSubmit = (e) => {
     const newUser= {
-      username,
       email,
       password,
       repeatPassword,
     }
     setFormError({
-      username:!username,
       email:!email,
       emailType: !validateEmail(email),
       password: !password,
       repeatPassword: newUser.password !== newUser.repeatPassword,
     })
+    if (newUser.password === newUser.repeatPassword) {
+      registerUser({
+        email: newUser.email,
+        password: newUser.password,
+      })
+    }
     setIsLoading(true)
 
     // Gọi API đăng nhập với username và password
@@ -100,15 +108,6 @@ function Register() {
           </Box>
           <Typography variant="h5" sx={{ textAlign: 'center' }}>Sign up</Typography>
           <Box>
-            <TextField
-              label="Username"
-              variant="outlined"
-              margin="normal"
-              fullWidth
-              value={username}
-              onChange={(e) => setUsername(e.target.value)}
-            />
-            { formError?.username && <Typography sx={{ color: 'error.main', fontWeight: 'bold' }}>Username not be empty</Typography>}
             <TextField
               label="Email"
               type="email"
@@ -180,17 +179,17 @@ function Register() {
               {isLoading && <CircularProgress size={24} sx={{ ml: 1 }} />}
             </Button>
             <Box sx={{ mt: 2, textAlign: 'center', color: 'white' }}>
-              <Link href="#">Forgot password?</Link>
+              <Link href="/login/identify">Forgot password?</Link>
             </Box>
             <Box color="primary" sx={{ my: 2, textAlign: 'center' }}>
               <Typography variant="body1" gutterBottom>Already have an account?&nbsp;
-                <Link href="/login" >Login</Link>
+                <Link href="/" >Login</Link>
               </Typography>
             </Box>
             <Divider>or connect with</Divider>
             <Stack direction="row" spacing={3} justifyContent="center" alignItems="center" sx={{ my: 2 }}>
               <FacebookIcon fontSize="large"/>
-              <GoogleIcon fontSize="large"/>
+              <GoogleIcon fontSize="large" onClick={google}/>
               <GitHubIcon fontSize="large"/>
             </Stack>
           </Box>

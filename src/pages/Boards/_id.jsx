@@ -19,13 +19,11 @@ import { generatePlaceholderCard } from '~/utils/formatters'
 import { isEmpty } from 'lodash'
 import { mapOrder } from '~/utils/sorts'
 import { toast } from 'react-toastify'
-import { useColorScheme } from '@mui/material'
 import CircularProgress from '@mui/material/CircularProgress'
 import Box from '@mui/material/Box'
 
 function Board() {
   const [board, setBoard] = useState(null)
-  const { mode } = useColorScheme()
 
   useEffect(() => {
     //react-route-dom
@@ -161,7 +159,7 @@ function Board() {
     setBoard(newBoard)
     // Gọi API phía BE
     deleteColumnDetailsAPI(columnId).then(() => {
-      toast.success('Delete Column Success', { theme: mode })
+      toast.success('Delete Column Success')
     })
   }
   // Xử lý xóa column và cards bên trong nó

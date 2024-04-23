@@ -23,7 +23,6 @@ import { CSS } from '@dnd-kit/utilities'
 import { useState } from 'react'
 import { TextField } from '@mui/material'
 import CloseIcon from '@mui/icons-material/Close'
-import { useColorScheme } from '@mui/material'
 import { toast } from 'react-toastify'
 import { useConfirm } from 'material-ui-confirm'
 
@@ -58,11 +57,10 @@ function Column({ column, createNewCard, deleteColumnDetails }) {
   const [openNewCardForm, setOpenNewCardForm] = useState(false)
   const toggleOpenNewCardForm = () => setOpenNewCardForm(!openNewCardForm)
   const [newCardTitle, setNewCardTitle] = useState('')
-  const { mode } = useColorScheme()
 
   const addNewCard = async () => {
     if (!newCardTitle) {
-      toast.error('Please Enter Column Title', { theme: mode })
+      toast.error('Please Enter Column Title')
       return
     }
     //Gọi API

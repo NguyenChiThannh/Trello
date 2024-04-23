@@ -1,6 +1,6 @@
 //import React from 'react'
 import Box from '@mui/material/Box'
-import ModeSelect from '~/components/ModeSelect'
+import ModeSelect from '~/components/ModeSelect/modeSelect'
 import AppsIcon from '@mui/icons-material/Apps'
 import { ReactComponent as TrelloIcon } from '~/assets/trello.svg'
 import SvgIcon from '@mui/material/SvgIcon'
@@ -17,7 +17,6 @@ import Tooltip from '@mui/material/Tooltip'
 import HelpOutlineIcon from '@mui/icons-material/HelpOutline'
 import Profiles from './Menus/Profiles'
 import InputAdornment from '@mui/material/InputAdornment'
-import CloseIcon from '@mui/icons-material/Close'
 import { useState } from 'react'
 import SearchIcon from '@mui/icons-material/Search'
 
@@ -33,7 +32,8 @@ function AppBar() {
       justifyContent:'space-between',
       gap: 3,
       px: 2,
-      overflowX: 'auto'
+      overflowX: 'auto',
+      borderBottom:(theme) => `1.5px solid ${theme.palette.primary.main}`
     }}>
       <Box sx={{ display:'flex', alignItems:'center', gap :2 }}>
         <AppsIcon sx={{ color:(theme) => theme.palette.primary.main }}/>

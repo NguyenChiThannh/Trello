@@ -26,7 +26,6 @@ function BoardBar({ board }) {
       px: 2,
       alignItems: 'center',
       justifyContent:'space-between',
-      borderTop:(theme) => `1.5px solid ${theme.palette.primary.main}`
     }}>
       <Box sx={{ display:'flex', alignItems:'center', gap :2 }}>
         <Tooltip title={board?.description}>

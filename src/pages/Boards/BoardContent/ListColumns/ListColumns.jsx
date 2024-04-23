@@ -7,17 +7,15 @@ import { useState } from 'react'
 import { TextField } from '@mui/material'
 import CloseIcon from '@mui/icons-material/Close'
 import { toast } from 'react-toastify'
-import { useColorScheme } from '@mui/material'
 
 function ListColumns({ columns, createNewColumn, createNewCard, deleteColumnDetails }) {
   const [openNewColumnForm, setOpenNewColumnForm] = useState(false)
   const toggleOpenNewColumnForm = () => setOpenNewColumnForm(!openNewColumnForm)
   const [newColumnTitle, setNewColumnTitle] = useState('')
-  const { mode } = useColorScheme()
 
   const addNewColumn = async () => {
     if (!newColumnTitle) {
-      toast.error('Please Enter Column Title', { theme: mode })
+      toast.error('Please Enter Column Title')
       return
     }
     // Tạo dữ liệu Column để gọi API
