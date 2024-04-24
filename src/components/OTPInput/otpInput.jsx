@@ -6,11 +6,14 @@ import DialogContent from '@mui/material/DialogContent'
 import DialogTitle from '@mui/material/DialogTitle'
 import { Typography } from '@mui/material'
 import Link from '@mui/material/Link'
+import { verifyOTP } from '~/apis/otp'
+import { useNavigate } from 'react-router-dom'
 
-function OTP_Input({ onClose }) {
+function OTP_Input({ onClose, email }) {
   const [otp, setOtp] = useState('')
   const [disabled, setDisabled] = useState(true) // Set disable for button verify
   const [open, setOpen] = useState(true)
+  const navigate = useNavigate()
 
   const handleOtpChange = (e) => {
     setOtp(e)
@@ -21,8 +24,14 @@ function OTP_Input({ onClose }) {
     setOpen(false)
   }
 
-  const verifyOTP = () => {
+
+  const verify = () => {
     handleClose()
+    const data = {
+      email,
+      otp,
+    }
+    verifyOTP(data, navigate)
   }
 
   return (
@@ -71,7 +80,7 @@ function OTP_Input({ onClose }) {
           }}
           renderInput={(props) => <input {...props} />}
         />
-        <Button disabled={disabled} onClick={verifyOTP}
+        <Button disabled={disabled} onClick={verify}
           sx={{
             display:'flex',
             maxWidth: '100px',

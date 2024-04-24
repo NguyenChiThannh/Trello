@@ -10,6 +10,7 @@ import Dialog from '@mui/material/Dialog'
 import DialogContent from '@mui/material/DialogContent'
 import DialogTitle from '@mui/material/DialogTitle'
 import { useParams } from 'react-router-dom'
+import { sendOTP } from '~/apis/otp'
 
 function IdentifyStep2() {
   const [openDialogOTP, setOpenDialogOTP] = useState(false)
@@ -22,11 +23,11 @@ function IdentifyStep2() {
     setColorBoxShadow(mode =='light' ? 'rgba(17, 17, 26, 0.1)' : 'rgba(250, 250, 250, 0.1)')
   }, [mode])
 
-
   const handleSendCodeToEmail = (e) => {
     e.preventDefault()
     setOpenDialogOTP(true)
-    console.log(email.email)
+    sendOTP(email)
+
 
     // Gọi API đăng nhập với email và password
 
@@ -107,7 +108,7 @@ function IdentifyStep2() {
           </Box>
         </Box>
       </Box>
-      {openDialogOTP && <OTP_Input onClose={() => setOpenDialogOTP(false)} />}
+      {openDialogOTP && <OTP_Input email={email.email} onClose={() => setOpenDialogOTP(false)} />}
 
       {/* DiaLog To Enter Telephone Number */}
       <Dialog
