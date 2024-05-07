@@ -5,7 +5,7 @@ import Button from '@mui/material/Button'
 import Link from '@mui/material/Link'
 import Box from '@mui/material/Box'
 import { useColorScheme } from '@mui/material'
-import OTP_Input from '~/components/OTPInput/otpInput'
+import OTP_Input from '~/components/OTPInput/OTPInput'
 import Dialog from '@mui/material/Dialog'
 import DialogContent from '@mui/material/DialogContent'
 import DialogTitle from '@mui/material/DialogTitle'
@@ -103,7 +103,7 @@ function IdentifyStep2() {
             Phone number
             </Button>
             <Box sx={{ mt: 2, textAlign: 'center', color: 'white' }}>
-              <Link href="/">Go to login</Link>
+              <Link href="">Go to login</Link>
             </Box>
           </Box>
         </Box>

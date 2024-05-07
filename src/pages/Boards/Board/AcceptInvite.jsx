@@ -4,16 +4,16 @@ import { toast } from 'react-toastify'
 import { axiosInstance } from '~/apis/config'
 import Loading from '~/components/Loading/Loading'
 
-function VerifyAccount() {
+function AcceptInvite() {
   const { token1, token2, token3 } = useParams()
-  const infoUserToken = {
+  const Token = {
     token: `${token1}.${token2}.${token3}`
   }
   const navigate = useNavigate()
   async function getData () {
     try {
-      await axiosInstance.post('/v1/auth/verify-account', infoUserToken)
-      toast.success('Verify Success. Please log in !!!')
+      await axiosInstance.post('/v1/invitations/accpect-invitation', Token)
+      toast.success('You have successfully joined the board')
       navigate('/')
     } catch (error) {
       const err = error.response.data.message
@@ -30,4 +30,4 @@ function VerifyAccount() {
   )
 }
 
-export default VerifyAccount
+export default AcceptInvite

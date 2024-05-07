@@ -98,6 +98,8 @@ function Login() {
             }}>Login</Typography>
           <Box component="form" onSubmit={handleSubmit} fullWidth>
             <TextField
+              error = {formError?.email}
+              required
               label="Email"
               type='email'
               variant="outlined"
@@ -114,6 +116,8 @@ function Login() {
             <FormControl variant="outlined" fullWidth sx={{ mt: '10px' }}>
               <InputLabel htmlFor="outlined-adornment-password">Password</InputLabel>
               <OutlinedInput
+                required
+                error = {formError?.password}
                 id="outlined-adornment-password"
                 type={showPassword ? 'text' : 'password'}
                 value={password}

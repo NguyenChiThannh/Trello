@@ -2,18 +2,19 @@
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom'
 import Login from './pages/Auth/Login/Login'
 import Register from './pages/Auth/Register/Register'
-import Board from './pages/Boards/_id'
-import BoardList from './pages/Boards'
-import Loading from './components/Loading/loading'
+import Board from './pages/Boards/Board/Board'
+import BoardList from './pages/Boards/Boards'
+import Loading from './components/Loading/Loading'
 import { ToastContainer } from 'react-toastify'
 import { useColorScheme } from '@mui/material'
 import { useSelector } from 'react-redux'
-import OTP_Input from './components/OTPInput/otpInput'
+import OTP_Input from './components/OTPInput/OTPInput'
 import NOTFOUND from './pages/NOTFOUND/NOTFOUND'
 import Identify from './pages/Auth/Login/Identify/Identify'
 import IdentifyStep2 from './pages/Auth/Login/Identify/IdentifyStep2'
 import VerifyAccount from './pages/Auth/Register/VerifyAccount'
 import LoginSuccess from './pages/Auth/Login/LoginSuccess'
+import AcceptInvite from './pages/Boards/Board/AcceptInvite'
 
 function App() {
   const { mode } = useColorScheme()
@@ -31,6 +32,7 @@ function App() {
         <Route path="/otp" element={<OTP_Input />} />
         <Route path="/verify-account/:token1/:token2/:token3" element={<VerifyAccount />} />
         <Route path="/login-success" element={<LoginSuccess />} />
+        <Route path="/accpect-invitation/:token1/:token2/:token3" element={<AcceptInvite />} />
         <Route path="*" element={<NOTFOUND />} />
       </Routes>
       <ToastContainer position="bottom-right" autoClose={3000} closeOnClick theme={mode}/>

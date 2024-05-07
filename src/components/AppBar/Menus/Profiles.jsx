@@ -10,13 +10,16 @@ import Tooltip from '@mui/material/Tooltip'
 import PersonAdd from '@mui/icons-material/PersonAdd'
 import Settings from '@mui/icons-material/Settings'
 import Logout from '@mui/icons-material/Logout'
-import { logoutUser } from '~/apis/auth'
+import { logoutUserAPI } from '~/apis/auth'
 import { useDispatch, useSelector } from 'react-redux'
+import { useNavigate } from 'react-router-dom'
+
 
 
 function Profiles() {
   const [anchorEl, setAnchorEl] = useState(null)
   const dispatch = useDispatch()
+  const navigate = useNavigate()
   const open = Boolean(anchorEl)
   const user = useSelector((state) => state.auth.login.currentUser)
   const handleClick = (event) => {
@@ -26,7 +29,7 @@ function Profiles() {
     setAnchorEl(null)
   }
   const handleLogout = () => {
-    logoutUser(dispatch)
+    logoutUserAPI(dispatch, navigate)
     handleClose()
   }
 

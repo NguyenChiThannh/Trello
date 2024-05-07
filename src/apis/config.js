@@ -11,3 +11,11 @@ export const axiosInstance = axios.create({
   withCredentials: true // Cho phép gửi cokiee cùng với http
 })
 
+// Add a response interceptor
+axiosInstance.interceptors.response.use(function (response) {
+  return response
+}, function (error) {
+  const err = error.response.data.message
+  toast.error(err)
+})
+

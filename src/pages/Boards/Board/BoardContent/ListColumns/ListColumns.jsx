@@ -7,12 +7,26 @@ import { useState } from 'react'
 import { TextField } from '@mui/material'
 import CloseIcon from '@mui/icons-material/Close'
 import { toast } from 'react-toastify'
+import { useDispatch, useSelector } from 'react-redux'
+import { getBoardDetailAPI } from '~/apis/board'
+import { useNavigate } from 'react-router-dom'
+import { createNewColumnAPI } from '~/apis/column'
 
-function ListColumns({ columns, createNewColumn, createNewCard, deleteColumnDetails }) {
+function ListColumns({ columns }) {
+  const navigate = useNavigate()
+  const dispatch = useDispatch()
   const [openNewColumnForm, setOpenNewColumnForm] = useState(false)
   const toggleOpenNewColumnForm = () => setOpenNewColumnForm(!openNewColumnForm)
   const [newColumnTitle, setNewColumnTitle] = useState('')
+  const board = (useSelector((state) => state.board.board.board))
 
+  const createNewColumn = async (newColumnData) => {
+    await createNewColumnAPI({
+      ...newColumnData,
+      boardId : board._id
+    })
+    getBoardDetailAPI(board._id, dispatch, navigate)
+  }
   const addNewColumn = async () => {
     if (!newColumnTitle) {
       toast.error('Please Enter Column Title')
@@ -22,10 +36,8 @@ function ListColumns({ columns, createNewColumn, createNewCard, deleteColumnDeta
     const newColumnData = {
       title: newColumnTitle,
     }
-
-    // Sử dụng redux thì sẽ chuẩn chỉnh ở chỗ này hơn
     await createNewColumn(newColumnData)
-
+    getBoardDetailAPI(board._id, dispatch, navigate)
     //Đóng trạng thái thêm column và clear input
     toggleOpenNewColumnForm()
     setNewColumnTitle('')
@@ -48,8 +60,6 @@ function ListColumns({ columns, createNewColumn, createNewCard, deleteColumnDeta
           return (<Column
             key={column._id}
             column={column}
-            createNewCard={createNewCard}
-            deleteColumnDetails={deleteColumnDetails}
           />)
         })}
         {/* Box Add new column */}

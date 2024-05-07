@@ -55,6 +55,7 @@ function Register() {
 
 
   const handleSubmit = (e) => {
+    e.preventDefault()
     const newUser= {
       email,
       password,
@@ -102,13 +103,14 @@ function Register() {
           boxShadow: `${colorBoxShadow} 0px 1px 0px, ${colorBoxShadow} 0px 0px 8px`,
         }}
       >
-        <Box>
+        <Box component="form" onSubmit={handleSubmit}>
           <Box sx={{ display: 'flex', justifyContent: 'center', marginBottom: '10px' }}>
             <Avatar alt="Travis Howard" src="/static/images/avatar/2.jpg" />
           </Box>
           <Typography variant="h5" sx={{ textAlign: 'center' }}>Sign up</Typography>
           <Box>
             <TextField
+              required
               label="Email"
               type="email"
               variant="outlined"
@@ -122,6 +124,7 @@ function Register() {
             <FormControl variant="outlined" fullWidth sx={{ my: '15px' }}>
               <InputLabel htmlFor="outlined-adornment-password">Password</InputLabel>
               <OutlinedInput
+                required
                 id="outlined-adornment-password"
                 type={showPassword ? 'text' : 'password'}
                 value={password}
@@ -146,6 +149,7 @@ function Register() {
             <FormControl variant="outlined" fullWidth sx={{ my: '10px' }}>
               <InputLabel htmlFor="outlined-adornment-repeat-password">Confirm Password</InputLabel>
               <OutlinedInput
+                required
                 id="outlined-adornment-repeat-password"
                 type={showPassword ? 'text' : 'password'}
                 value={repeatPassword}
@@ -173,7 +177,6 @@ function Register() {
               fullWidth
               disabled={isLoading}
               sx={{ mt: 3 }}
-              onClick={handleSubmit}
             >
             Sign up
               {isLoading && <CircularProgress size={24} sx={{ ml: 1 }} />}

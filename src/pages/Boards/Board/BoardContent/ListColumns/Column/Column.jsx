@@ -25,8 +25,13 @@ import { TextField } from '@mui/material'
 import CloseIcon from '@mui/icons-material/Close'
 import { toast } from 'react-toastify'
 import { useConfirm } from 'material-ui-confirm'
+import { useDispatch, useSelector } from 'react-redux'
+import { getBoardDetailAPI } from '~/apis/board'
+import { useNavigate } from 'react-router-dom'
+import { createNewCardAPI } from '~/apis/card'
+import { deleteColumnDetailsAPI } from '~/apis/column'
 
-function Column({ column, createNewCard, deleteColumnDetails }) {
+function Column({ column }) {
   // drag
   const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({
     id: column._id,
@@ -53,10 +58,28 @@ function Column({ column, createNewCard, deleteColumnDetails }) {
   }
   // Sort Card
   const orderedCards = mapOrder(column?.cards, column?.cardOrderIds, '_id')
-
+  const navigate = useNavigate()
+  const dispatch = useDispatch()
   const [openNewCardForm, setOpenNewCardForm] = useState(false)
   const toggleOpenNewCardForm = () => setOpenNewCardForm(!openNewCardForm)
   const [newCardTitle, setNewCardTitle] = useState('')
+  const board = (useSelector((state) => state.board.board.board))
+
+  // Tạo API tạo mới column và làm lại dữ liệu State Board
+  const createNewCard = async (newCardData) => {
+    await createNewCardAPI({
+      ...newCardData,
+      boardId : board._id
+    })
+    getBoardDetailAPI(board._id, dispatch, navigate)
+  }
+
+  const deleteColumnDetails = async (columnId) => {
+    deleteColumnDetailsAPI(columnId).then(() => {
+      toast.success('Delete Column Success')
+    })
+    getBoardDetailAPI(board._id, dispatch, navigate)
+  }
 
   const addNewCard = async () => {
     if (!newCardTitle) {
@@ -68,10 +91,8 @@ function Column({ column, createNewCard, deleteColumnDetails }) {
       title: newCardTitle,
       columnId: column._id
     }
-
-    //console.log(newCardTitle)
-    // Sử dụng redux thì sẽ chuẩn chỉnh ở chỗ này hơn
     await createNewCard(newCardData)
+    getBoardDetailAPI(board._id, dispatch, navigate)
 
     //Đóng trạng thái thêm column và clear input
     toggleOpenNewCardForm()

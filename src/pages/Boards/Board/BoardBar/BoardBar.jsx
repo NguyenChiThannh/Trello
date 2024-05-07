@@ -11,11 +11,42 @@ import Tooltip from '@mui/material/Tooltip'
 import Button from '@mui/material/Button'
 import PersonAddIcon from '@mui/icons-material/PersonAdd'
 import { capitalizeFirstLetter } from '~/utils/formatters'
+import Dialog from '@mui/material/Dialog'
+import DialogActions from '@mui/material/DialogActions'
+import DialogContent from '@mui/material/DialogContent'
+import DialogTitle from '@mui/material/DialogTitle'
+import TextField from '@mui/material/TextField'
+import { useState } from 'react'
+import { inviteMemberAPI } from '~/apis/invitation'
+import { useSelector } from 'react-redux'
 
 
-function BoardBar({ board }) {
-  // const {board} = props
-  // const board = props.board
+function BoardBar() {
+
+  const [openDiaLogInviteMember, setOpenDiaLogInviteMember] = useState(false)
+  const [email, setEmail] = useState('')
+  const board = (useSelector((state) => state.board.board.board))
+
+  const inviteMember = () => {
+    setOpenDiaLogInviteMember(true)
+  }
+
+  const handleClose = () => {
+    setOpenDiaLogInviteMember(false)
+  }
+
+
+  const handleInviteMember = (e) => {
+    e.preventDefault()
+    const data = {
+      boardId: board._id,
+      email,
+    }
+    inviteMemberAPI(data)
+    setEmail('')
+    handleClose()
+  }
+
   return (
     <Box sx={{
       gap: 3,
@@ -63,7 +94,9 @@ function BoardBar({ board }) {
         />
       </Box>
       <Box sx={{ display:'flex', alignItems:'center', gap :2 }}>
-        <Button variant="outlined" startIcon={<PersonAddIcon />}>
+        <Button variant="outlined" startIcon={<PersonAddIcon />}
+          onClick={inviteMember}
+        >
           Invite
         </Button>
         <AvatarGroup
@@ -76,40 +109,38 @@ function BoardBar({ board }) {
             }
           }}
         >
-          <Tooltip title="ChiThanh">
+          {board.members.map((member) => <Tooltip key={member._id} title={member.displayName }>
             <Avatar alt="Remy Sharp" src="/static/images/avatar/1.jpg" />
-          </Tooltip>
-          <Tooltip title="ChiThanh">
-            <Avatar alt="Travis Howard" src="/static/images/avatar/2.jpg" />
-          </Tooltip>
-          <Tooltip title="ChiThanh">
-            <Avatar alt="Cindy Baker" src="/static/images/avatar/3.jpg" />
-          </Tooltip>
-          <Tooltip title="ChiThanh">
-            <Avatar alt="Agnes Walker" src="/static/images/avatar/4.jpg" />
-          </Tooltip>
-          <Tooltip title="ChiThanh">
-            <Avatar alt="Trevor Henderson" src="/static/images/avatar/5.jpg" />
-          </Tooltip>
-          <Tooltip title="ChiThanh">
-            <Avatar alt="Remy Sharp" src="/static/images/avatar/1.jpg" />
-          </Tooltip>
-          <Tooltip title="ChiThanh">
-            <Avatar alt="Travis Howard" src="/static/images/avatar/2.jpg" />
-          </Tooltip>
-          <Tooltip title="ChiThanh">
-            <Avatar alt="Cindy Baker" src="/static/images/avatar/3.jpg" />
-          </Tooltip>
-          <Tooltip title="ChiThanh">
-            <Avatar alt="Agnes Walker" src="/static/images/avatar/4.jpg" />
-          </Tooltip>
-          <Tooltip title="ChiThanh">
-            <Avatar alt="Trevor Henderson" src="/static/images/avatar/5.jpg" />
-          </Tooltip>
+          </Tooltip>)}
         </AvatarGroup>
       </Box>
-    </Box>
 
+      {/* Dialog Invite Member To The Board */}
+      <Dialog
+        open={openDiaLogInviteMember}
+        onClose={handleClose}
+        component="form"
+        onSubmit={handleInviteMember}
+      >
+        <DialogTitle>Invite Member To The Board</DialogTitle>
+        <DialogContent>
+          <TextField
+            required
+            label="Email"
+            type='email'
+            variant="outlined"
+            margin="normal"
+            fullWidth
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+          />
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleClose}>Cancel</Button>
+          <Button type="submit" >Invite</Button>
+        </DialogActions>
+      </Dialog>
+    </Box>
   )
 }
 

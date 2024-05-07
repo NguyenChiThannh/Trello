@@ -57,6 +57,7 @@ function Identify() {
           </Typography>
           <Box component="form" onSubmit={handleSubmit} fullWidth>
             <TextField
+              required
               label="Email"
               type='email'
               variant="outlined"
@@ -71,7 +72,6 @@ function Identify() {
               color="primary"
               type="submit"
               fullWidth
-              onClick={handleSubmit}
               sx={{ mt: 3 }}
             >
             Next

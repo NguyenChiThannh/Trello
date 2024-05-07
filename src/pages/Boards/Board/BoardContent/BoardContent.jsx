@@ -20,21 +20,24 @@ import Column from './ListColumns/Column/Column'
 import Card from './ListColumns/Column/ListCards/Card/Card'
 import { cloneDeep, isEmpty } from 'lodash'
 import { generatePlaceholderCard } from '~/utils/formatters'
+import Fab from '@mui/material/Fab'
+import MessageIcon from '@mui/icons-material/Message'
+import Drawer from '@mui/material/Drawer'
+import Badge from '@mui/material/Badge'
+import Avatar from '@mui/material/Avatar'
+import Typography from '@mui/material/Typography'
+import Divider from '@mui/material/Divider'
+import ChatBox from '~/components/ChatBox/ChatBox'
+import { useSelector } from 'react-redux'
+import { moveCardToDifferentColumnAPI, updatedAtBoardDetailsAPI } from '~/apis/board'
+import { updatedAtColumnDetailsAPI } from '~/apis/column'
 
 const ACTIVE_DRAG_ITEM_TYPE ={
   COLUMN: 'ACTIVE_DRAG_ITEM_TYPE_COLUMN',
   CARD: 'ACTIVE_DRAG_ITEM_TYPE_CARD'
 }
 
-function BoardContent({
-  board,
-  createNewColumn,
-  createNewCard,
-  moveColumns,
-  moveCardInTheSameColumn,
-  moveCardToDifferentColumn,
-  deleteColumnDetails,
-}) {
+function BoardContent() {
   // https://docs.dndkit.com/api-documentation/sensors
   const mouseSensor = useSensor(MouseSensor, {
     // Require the mouse to move by 10 pixels before activating
@@ -56,7 +59,24 @@ function BoardContent({
   const [activeDragItemType, setActiveDragItemType] = useState(null)
   const [activeDragItemData, setActiveDragItemData] = useState(null)
   const [oldColumnWhenDraggingCard, setOldColumnWhenDraggingCard] = useState(null)
+  const [openDraw, setOpenDraw] = useState(false)
+  const [openChat, setOpenChat] = useState(false)
+  const [receiverId, setReceiverId] = useState('')
 
+  const board = (useSelector((state) => state.board.board.board))
+
+  const toggleDrawer = (newOpen) => () => {
+    setOpenDraw(newOpen)
+  }
+  const handleCloseDraw = () => {
+    setOpenDraw(false)
+  }
+
+  const handleChat = (id) => {
+    setReceiverId(id)
+    setOpenChat(true)
+    handleCloseDraw()
+  }
 
   useEffect(() => {
     setOrderedColumnsState(mapOrder(board?.columns, board?.columnOrderIds, '_id'))
@@ -68,6 +88,64 @@ function BoardContent({
       column?.cards?.map(card => card._id)?.includes(cardId))
   }
 
+  // Gọi API để cập nhật cardOrderIds của Column chứa nó
+  const moveCardInTheSameColumn = async (dndOrderedCards, dndOrderedCardIds, columnId) => {
+    // Cập nhật state board
+    const newBoard = { ...board }
+    const columnToUpdate = newBoard.columns.find(column => column._id === columnId)
+    if (columnToUpdate) {
+      columnToUpdate.cards = dndOrderedCards
+      columnToUpdate.cardOrderIds = dndOrderedCardIds
+    }
+
+    //Gọi API update Board
+    await updatedAtColumnDetailsAPI(columnId, { cardOrderIds: dndOrderedCardIds })
+  }
+
+  // Gọi API và xử lý khi kéo thả Column khi kéo thả xong
+  const moveColumns = async (dndOrderedColumns) => {
+    // Cập nhật State Board
+    const dndOrderedColumnsIds = dndOrderedColumns.map(c => c._id)
+
+    const newBoard = { ...board }
+    newBoard.columns = dndOrderedColumns
+    newBoard.columnOrderIds = dndOrderedColumnsIds
+
+    //Gọi API update Board
+    await updatedAtBoardDetailsAPI(newBoard._id, { columnOrderIds: newBoard.columnOrderIds })
+  }
+
+  // Khi di chuyển sang column khác:
+  // Bước 1: Cập nhật mảng cardOrderIds của column ban đầu chứa nó (xóa cái _id của Card ra khỏi mảng)
+  // Bước 2: Cập nhật mảng cardOrderIds của column tiếp theo ( thêm _id của Card vào mảng)
+  // Bước 3: Cập nhật lại trường columnId mới của cái Card đã kéo
+  const moveCardToDifferentColumn = async (currentCardId, prevColumnId, nextColumnId, dndOrderedColumns) => {
+    // console.log('currentCardId:', currentCardId)
+    // console.log('prevColumnId:', prevColumnId)
+    // console.log('nextColumnId:', nextColumnId)
+    // console.log('dndOrderedColumns:', dndOrderedColumns)
+
+    // Update cho chuẩn dữ liệu state Board
+    const dndOrderedColumnsIds = dndOrderedColumns.map(c => c._id)
+    const newBoard = { ...board }
+    newBoard.columns = dndOrderedColumns
+    newBoard.columnOrderIds = dndOrderedColumnsIds
+
+    let prevCardOrderIds = dndOrderedColumns.find(c => c._id === prevColumnId)?.cardOrderIds
+    // Xử lý vấn đề khi Card cuối cùng ra khỏi Column, Column rỗng sẽ có placeholder card, cần xóa nó đi trước đi gửi lên BE
+    if ( prevCardOrderIds[0].includes('placeholder-card')) {
+      prevCardOrderIds = []
+    }
+
+    //Gọi API xử lý phía BE
+    await moveCardToDifferentColumnAPI({
+      currentCardId,
+      prevColumnId,
+      prevCardOrderIds: prevCardOrderIds,
+      nextColumnId,
+      nextCardOrderIds: dndOrderedColumns.find(c => c._id === nextColumnId)?.cardOrderIds,
+    })
+  }
   const moveCardBetweenDifferentColumns = (
     overColumn,
     overCardId,
@@ -254,7 +332,6 @@ function BoardContent({
         // Dùng arrayMove của dnd-kit sắp xếp lại Columns ban đầu
         const dndOrderedColumns = arrayMove(orderedColumnsState, oldColumnIndex, newColumnIndex)
         // const dndOrderedColumnsIds = dndOrderedColumns.map(c => c._id)
-        // Gọi props function moveColumns ở component cha
 
         // Cập nhật ví trí sau khi kéo (state ở đây có thêm tác dụng là khi gọi API nếu dữ liệu chưa cập nhật thì nó kh bị khó chịu cho người dùng)
         setOrderedColumnsState(dndOrderedColumns)
@@ -280,6 +357,8 @@ function BoardContent({
       }
     })
   }
+
+
   return (
     <DndContext
       sensors={mySensors}
@@ -300,10 +379,6 @@ function BoardContent({
       }}>
         <ListColumns
           columns={orderedColumnsState}
-
-          createNewColumn={createNewColumn}
-          createNewCard={createNewCard}
-          deleteColumnDetails= {deleteColumnDetails}
         />
         {/* Nếu kiểm tra activeDragItem là false thì trả về null còn không phải thì kiểm tra xem trường hợp đó là Card hay column rồi sẽ set Overlay là đối tượng đó  */}
         <DragOverlay dropAnimation={customDropAnimation}>
@@ -311,6 +386,41 @@ function BoardContent({
           {(activeDragItemType === ACTIVE_DRAG_ITEM_TYPE.COLUMN) && <Column column={activeDragItemData}/> }
           {(activeDragItemType === ACTIVE_DRAG_ITEM_TYPE.CARD) && <Card card={activeDragItemData}/> }
         </DragOverlay>
+
+        {/* Float Button Message */}
+        <Fab aria-label="add" onClick={toggleDrawer(true)} sx={{ position: 'fixed', bottom: '20px', right: '20px' }}>
+          <MessageIcon />
+        </Fab>
+        <ChatBox open={openChat} receiverId={receiverId}></ChatBox>
+        <Drawer open={openDraw} onClose={handleCloseDraw} anchor={'right'} sx={{
+        }}>
+          <Typography variant="h6" justifyContent={'center'} alignItems={'center'} display={'flex'} fontSize={'32px'} color={'primary'}>Member</Typography>
+          <Divider />
+          <Box sx={{
+            width: '400px',
+            gap: '16px',
+            m:'8px',
+          }}>
+            {board.members.map((member) =>
+              <Box key={member._id} sx={{
+                display: 'flex',
+                gap: '16px',
+                m:'16px',
+              }}
+              onClick={() => {handleChat(member._id)}}
+              >
+                <Badge
+                  overlap="circular"
+                  anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+                  variant="dot"
+                  color='primary'
+                >
+                  <Avatar alt="Travis Howard" src="/static/images/avatar/2.jpg" />
+                </Badge>
+                <Typography variant="h6" justifyContent={'center'} alignItems={'center'} display={'flex'} fontSize={'16px'}>{member.displayName}</Typography>
+              </Box>)}
+          </Box>
+        </Drawer>
       </Box>
     </DndContext>
   )

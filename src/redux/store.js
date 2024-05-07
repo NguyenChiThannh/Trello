@@ -1,5 +1,6 @@
 import { configureStore, combineReducers } from '@reduxjs/toolkit'
 import authReducer from './authSlice'
+import boardReducer from './boardSlice'
 import {
   persistStore,
   persistReducer,
@@ -17,7 +18,7 @@ const persistConfig = {
   version: 1,
   storage,
 }
-const rootReducer = combineReducers({ auth: authReducer })
+const rootReducer = combineReducers({ auth: authReducer, board: boardReducer })
 const persistedReducer = persistReducer(persistConfig, rootReducer)
 export const store = configureStore({
   reducer: persistedReducer,

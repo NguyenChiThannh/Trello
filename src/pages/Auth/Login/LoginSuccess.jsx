@@ -1,5 +1,5 @@
 import { useDispatch } from 'react-redux'
-import Loading from '~/components/Loading/loading'
+import Loading from '~/components/Loading/Loading'
 import { axiosInstance } from '~/apis/config'
 import { toast } from 'react-toastify'
 import { useNavigate } from 'react-router-dom'
