@@ -31,6 +31,8 @@ import ChatBox from '~/components/ChatBox/ChatBox'
 import { useSelector } from 'react-redux'
 import { moveCardToDifferentColumnAPI, updatedAtBoardDetailsAPI } from '~/apis/board'
 import { updatedAtColumnDetailsAPI } from '~/apis/column'
+import DetailCard from './ListColumns/Column/ListCards/Card/DetailCard/DetailCard'
+import useDetailCardStore from '~/zustand/useDetailCard'
 
 const ACTIVE_DRAG_ITEM_TYPE ={
   COLUMN: 'ACTIVE_DRAG_ITEM_TYPE_COLUMN',
@@ -54,6 +56,10 @@ function BoardContent() {
   })
   const mySensors = useSensors(touchSensor, mouseSensor)
 
+  const openDetailCard = useDetailCardStore((state) => state.openDetailCard)
+  const selectedCard = useDetailCardStore((state) => state.selectedCard)
+  const setOpenDetailCard = useDetailCardStore((state) => state.setOpenDetailCard)
+
   const [orderedColumnsState, setOrderedColumnsState] = useState([])
   const [activeDragItemId, setActiveDragItemId] = useState(null)
   const [activeDragItemType, setActiveDragItemType] = useState(null)
@@ -62,6 +68,7 @@ function BoardContent() {
   const [openDraw, setOpenDraw] = useState(false)
   const [openChat, setOpenChat] = useState(false)
   const [receiverId, setReceiverId] = useState('')
+  const user = useSelector((state) => state.auth.login.currentUser)
 
   const board = (useSelector((state) => state.board.board.board))
 
@@ -70,6 +77,9 @@ function BoardContent() {
   }
   const handleCloseDraw = () => {
     setOpenDraw(false)
+  }
+  const handleChatBoxToggle = (isOpen) => {
+    setOpenChat(isOpen)
   }
 
   const handleChat = (id) => {
@@ -99,7 +109,7 @@ function BoardContent() {
     }
 
     //Gọi API update Board
-    await updatedAtColumnDetailsAPI(columnId, { cardOrderIds: dndOrderedCardIds })
+    await updatedAtColumnDetailsAPI(columnId, { cardOrderIds: dndOrderedCardIds, boardId: board._id })
   }
 
   // Gọi API và xử lý khi kéo thả Column khi kéo thả xong
@@ -112,7 +122,7 @@ function BoardContent() {
     newBoard.columnOrderIds = dndOrderedColumnsIds
 
     //Gọi API update Board
-    await updatedAtBoardDetailsAPI(newBoard._id, { columnOrderIds: newBoard.columnOrderIds })
+    await updatedAtBoardDetailsAPI(newBoard._id, { columnOrderIds: newBoard.columnOrderIds, boardId: board._id })
   }
 
   // Khi di chuyển sang column khác:
@@ -144,6 +154,7 @@ function BoardContent() {
       prevCardOrderIds: prevCardOrderIds,
       nextColumnId,
       nextCardOrderIds: dndOrderedColumns.find(c => c._id === nextColumnId)?.cardOrderIds,
+      boardId: board._id,
     })
   }
   const moveCardBetweenDifferentColumns = (
@@ -375,7 +386,6 @@ function BoardContent() {
         backgroundRepeat: 'no-repeat',
         width:'100%',
         height:(theme) => theme.trello.boardContentHeight,
-        p: '10px 0px'
       }}>
         <ListColumns
           columns={orderedColumnsState}
@@ -391,7 +401,7 @@ function BoardContent() {
         <Fab aria-label="add" onClick={toggleDrawer(true)} sx={{ position: 'fixed', bottom: '20px', right: '20px' }}>
           <MessageIcon />
         </Fab>
-        <ChatBox open={openChat} receiverId={receiverId}></ChatBox>
+        {openChat && <ChatBox open={openChat} receiverId={receiverId} onToggle={handleChatBoxToggle}></ChatBox> }
         <Drawer open={openDraw} onClose={handleCloseDraw} anchor={'right'} sx={{
         }}>
           <Typography variant="h6" justifyContent={'center'} alignItems={'center'} display={'flex'} fontSize={'32px'} color={'primary'}>Member</Typography>
@@ -401,26 +411,52 @@ function BoardContent() {
             gap: '16px',
             m:'8px',
           }}>
-            {board.members.map((member) =>
-              <Box key={member._id} sx={{
-                display: 'flex',
-                gap: '16px',
-                m:'16px',
-              }}
-              onClick={() => {handleChat(member._id)}}
-              >
-                <Badge
-                  overlap="circular"
-                  anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
-                  variant="dot"
-                  color='primary'
+            {board.user
+              .filter(member => member._id !== user._id)
+              .map((member) =>
+                <Box key={member._id} sx={{
+                  display: 'flex',
+                  gap: '16px',
+                  m:'16px',
+                }}
+                onClick={() => {handleChat(member._id)}}
                 >
-                  <Avatar alt="Travis Howard" src="/static/images/avatar/2.jpg" />
-                </Badge>
-                <Typography variant="h6" justifyContent={'center'} alignItems={'center'} display={'flex'} fontSize={'16px'}>{member.displayName}</Typography>
-              </Box>)}
+                  <Badge
+                    overlap="circular"
+                    anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+                    variant="dot"
+                    color='primary'
+                  >
+                    <Avatar alt="Travis Howard" src="/static/images/avatar/2.jpg" />
+                  </Badge>
+                  <Typography variant="h6" justifyContent={'center'} alignItems={'center'} display={'flex'} fontSize={'16px'}>{member.displayName}</Typography>
+                </Box>)}
+            {board.members
+              .filter(member => member._id !== user._id)
+              .map((member) =>
+                <Box key={member._id} sx={{
+                  display: 'flex',
+                  gap: '16px',
+                  m:'16px',
+                }}
+                onClick={() => {handleChat(member._id)}}
+                >
+                  <Badge
+                    overlap="circular"
+                    anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+                    variant="dot"
+                    color='primary'
+                  >
+                    <Avatar alt="Travis Howard" src="/static/images/avatar/2.jpg" />
+                  </Badge>
+                  <Typography variant="h6" justifyContent={'center'} alignItems={'center'} display={'flex'} fontSize={'16px'}>{member.displayName}</Typography>
+                </Box>)}
           </Box>
         </Drawer>
+
+        {/* Handle open Detail Card */}
+
+        {openDetailCard && <DetailCard card={selectedCard} openDetailCard={openDetailCard} setOpenDetailCard={setOpenDetailCard}></DetailCard>}
       </Box>
     </DndContext>
   )

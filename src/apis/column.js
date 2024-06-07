@@ -1,3 +1,4 @@
+import { toast } from 'react-toastify'
 import { axiosInstance } from './config'
 
 export const createNewColumnAPI = async (newColumnData) => {
@@ -10,6 +11,9 @@ export const updatedAtColumnDetailsAPI = async (columnId, updateData) => {
 
 }
 
-export const deleteColumnDetailsAPI = async (columnId) => {
-  await axiosInstance.delete(`/v1/columns/${columnId}`)
+export const deleteColumnDetailsAPI = async (columnId, boardId) => {
+  const res = await axiosInstance.delete(`/v1/columns/${columnId}`, { params: { boardId } })
+  if (res) {
+    toast.success('Delete Column Success')
+  }
 }

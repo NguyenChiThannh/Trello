@@ -13,10 +13,10 @@ import Logout from '@mui/icons-material/Logout'
 import { logoutUserAPI } from '~/apis/auth'
 import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
-
-
+import Loading from '~/components/Loading/Loading'
 
 function Profiles() {
+  const [isLoading, setIsLoading] = useState(false)
   const [anchorEl, setAnchorEl] = useState(null)
   const dispatch = useDispatch()
   const navigate = useNavigate()
@@ -29,7 +29,12 @@ function Profiles() {
     setAnchorEl(null)
   }
   const handleLogout = () => {
-    logoutUserAPI(dispatch, navigate)
+    logoutUserAPI(dispatch, navigate, setIsLoading)
+    handleClose()
+  }
+
+  const handleGoToProfile = () => {
+    navigate('/profile')
     handleClose()
   }
 
@@ -60,13 +65,10 @@ function Profiles() {
         transformOrigin={{ horizontal: 'right', vertical: 'top' }}
         anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
       >
-        <MenuItem onClick={handleClose}>
+        <MenuItem onClick={handleGoToProfile}>
           <Avatar src= {user.avatar ? user.avatar
             : '' }
           sx={{ width: '28px', height: '28px', marginRight:'16px' }} /> {user.displayName}
-        </MenuItem>
-        <MenuItem onClick={handleClose}>
-          <Avatar sx={{ width: '28px', height: '28px', marginRight:'16px' }} /> My account
         </MenuItem>
         <Divider />
         <MenuItem onClick={handleClose}>
@@ -88,6 +90,7 @@ function Profiles() {
           Logout
         </MenuItem>
       </Menu>
+      <Loading open={isLoading} />
     </Box>
   )
 }

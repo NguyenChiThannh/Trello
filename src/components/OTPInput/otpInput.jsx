@@ -11,7 +11,7 @@ import { useNavigate } from 'react-router-dom'
 
 function OTP_Input({ onClose, email }) {
   const [otp, setOtp] = useState('')
-  const [disabled, setDisabled] = useState(true) // Set disable for button verify
+  const [disabled, setDisabled] = useState(true)
   const [open, setOpen] = useState(true)
   const navigate = useNavigate()
 

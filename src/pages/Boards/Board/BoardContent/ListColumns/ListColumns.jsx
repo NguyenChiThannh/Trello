@@ -11,10 +11,12 @@ import { useDispatch, useSelector } from 'react-redux'
 import { getBoardDetailAPI } from '~/apis/board'
 import { useNavigate } from 'react-router-dom'
 import { createNewColumnAPI } from '~/apis/column'
+import Loading from '~/components/Loading/Loading'
 
 function ListColumns({ columns }) {
   const navigate = useNavigate()
   const dispatch = useDispatch()
+  const [isLoading, setIsLoading] = useState(false)
   const [openNewColumnForm, setOpenNewColumnForm] = useState(false)
   const toggleOpenNewColumnForm = () => setOpenNewColumnForm(!openNewColumnForm)
   const [newColumnTitle, setNewColumnTitle] = useState('')
@@ -25,7 +27,7 @@ function ListColumns({ columns }) {
       ...newColumnData,
       boardId : board._id
     })
-    getBoardDetailAPI(board._id, dispatch, navigate)
+    getBoardDetailAPI(board._id, dispatch, navigate, setIsLoading)
   }
   const addNewColumn = async () => {
     if (!newColumnTitle) {
@@ -37,7 +39,7 @@ function ListColumns({ columns }) {
       title: newColumnTitle,
     }
     await createNewColumn(newColumnData)
-    getBoardDetailAPI(board._id, dispatch, navigate)
+    getBoardDetailAPI(board._id, dispatch, navigate, setIsLoading)
     //Đóng trạng thái thêm column và clear input
     toggleOpenNewColumnForm()
     setNewColumnTitle('')
@@ -54,7 +56,8 @@ function ListColumns({ columns }) {
         height:(theme) => theme.trello.boardContentHeight,
         display: 'flex',
         overflowX: 'auto',
-        overflowY: 'hidden'
+        overflowY: 'hidden',
+        pt:'10px',
       }}>
         {columns?.map((column) => {
           return (<Column
@@ -136,6 +139,7 @@ function ListColumns({ columns }) {
           </Box>
         }
       </Box>
+      <Loading open={isLoading} />
     </SortableContext>
   )
 }

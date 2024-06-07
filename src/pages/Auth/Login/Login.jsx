@@ -2,7 +2,6 @@ import { useEffect, useState } from 'react'
 import TextField from '@mui/material/TextField'
 import Typography from '@mui/material/Typography'
 import Button from '@mui/material/Button'
-import CircularProgress from '@mui/material/CircularProgress'
 import Link from '@mui/material/Link'
 import Avatar from '@mui/material/Avatar'
 import Divider from '@mui/material/Divider'
@@ -20,15 +19,16 @@ import OutlinedInput from '@mui/material/OutlinedInput'
 import Box from '@mui/material/Box'
 import { useColorScheme } from '@mui/material'
 import { useDispatch } from 'react-redux'
-import { loginUser } from '~/apis/auth'
+import { loginUserAPI } from '~/apis/auth'
 import { API_ROOT } from '~/utils/constants'
+import Loading from '~/components/Loading/Loading'
 
 function Login() {
+  const [isLoading, setIsLoading] = useState(false)
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [colorBoxShadow, setColorBoxShadow] = useState('')
   const [showPassword, setShowPassword] = useState(false)
-  const [isLoading, setIsLoading] = useState(false)
   const [formError, setFormError] = useState({})
   const dispatch = useDispatch()
   const { mode } = useColorScheme()
@@ -55,24 +55,16 @@ function Login() {
       email:!email,
       password: !password,
     })
-    loginUser(user, dispatch)
-
-    // Gọi API đăng nhập với email và password
-
-    // Sau khi nhận được phản hồi từ API:
-
-    // Xử lý kết quả đăng nhập (thành công/thất bại)
+    loginUserAPI(user, dispatch, setIsLoading)
   }
 
   return (
     <Box sx={{
-      // backgroundColor: (theme) => theme.palette.secondary.main,
       width: '100%',
       height: '100vh',
       display: 'flex',
       alignItems: 'center',
     }}>
-      {isLoading && <CircularProgress/>}
       <Box
         sx={{
           // bgcolor: mode =='light' ? 'white' : 'black',
@@ -82,7 +74,6 @@ function Login() {
           borderRadius: '1rem',
           display: 'flex',
           alignItems: 'center',
-          // eslint-disable-next-line quotes
           boxShadow: `${colorBoxShadow} 0px 1px 0px, ${colorBoxShadow} 0px 0px 8px`,
         }}
       >
@@ -165,6 +156,7 @@ function Login() {
           </Box>
         </Box>
       </Box>
+      <Loading open={isLoading} />
     </Box>
   )
 }

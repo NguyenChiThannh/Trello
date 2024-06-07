@@ -1,8 +1,9 @@
 import Box from '@mui/material/Box'
 import Avatar from '@mui/material/Avatar'
 import Typography from '@mui/material/Typography'
+import { timeAgo } from '~/utils/formatters'
 
-function SentMessage() {
+function SentMessage(props) {
   return (
     <Box sx={{
       display: 'flex',
@@ -17,8 +18,8 @@ function SentMessage() {
         borderRadius:'16px',
         maxWidth: '60%',
         marginLeft: 'auto',
-      }}>Nội dung dài ơi là dài vẫn chưa đủ dài
-        <Typography variant="span" sx={{ fontSize:'10px', display: 'block' }}>2 minute ago</Typography>
+      }}>{props.message}
+        <Typography variant="span" sx={{ fontSize:'10px', display: 'block' }}>{timeAgo(props.time)}</Typography>
       </Box>
       <Avatar alt="Travis Howard" src="/static/images/avatar/2.jpg"
         sx={{ width: 26, height: 26, verticalAlign:'center' }}

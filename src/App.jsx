@@ -15,6 +15,7 @@ import IdentifyStep2 from './pages/Auth/Login/Identify/IdentifyStep2'
 import VerifyAccount from './pages/Auth/Register/VerifyAccount'
 import LoginSuccess from './pages/Auth/Login/LoginSuccess'
 import AcceptInvite from './pages/Boards/Board/AcceptInvite'
+import Profile from './pages/User/Profile/Profile'
 
 function App() {
   const { mode } = useColorScheme()
@@ -33,6 +34,7 @@ function App() {
         <Route path="/verify-account/:token1/:token2/:token3" element={<VerifyAccount />} />
         <Route path="/login-success" element={<LoginSuccess />} />
         <Route path="/accpect-invitation/:token1/:token2/:token3" element={<AcceptInvite />} />
+        <Route path="/profile" element={<Profile />} />
         <Route path="*" element={<NOTFOUND />} />
       </Routes>
       <ToastContainer position="bottom-right" autoClose={3000} closeOnClick theme={mode}/>

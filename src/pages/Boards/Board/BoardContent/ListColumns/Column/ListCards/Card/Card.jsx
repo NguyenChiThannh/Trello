@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import Card from '@mui/material/Card'
 import CardActions from '@mui/material/CardActions'
 import CardContent from '@mui/material/CardContent'
@@ -10,12 +10,17 @@ import Typography from '@mui/material/Typography'
 import Button from '@mui/material/Button'
 import { useSortable } from '@dnd-kit/sortable'
 import { CSS } from '@dnd-kit/utilities'
+import useDetailCardStore from '~/zustand/useDetailCard'
 
 function TrelloCard({ card }) {
+  const openDetailCard = useDetailCardStore((state) => state.openDetailCard)
+  const updateCard = useDetailCardStore((state) => state.updateCard)
+  const setOpenDetailCard = useDetailCardStore((state) => state.setOpenDetailCard)
   // drag
   const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({
     id: card._id,
-    data: { ...card }
+    data: { ...card },
+    disabled: openDetailCard,
   })
 
   const dndKitCardStyle = {
@@ -28,6 +33,11 @@ function TrelloCard({ card }) {
 
   }
 
+  const handleClickCard = () => {
+    setOpenDetailCard(true)
+    updateCard(card)
+  }
+
   const shouldShowCardActopms = () => {
     return !!card?.memberIds?.length || !!card?.comments?.length || !!card?.attachments?.length
   }
@@ -37,6 +47,7 @@ function TrelloCard({ card }) {
       style={dndKitCardStyle}
       {...attributes}
       {...listeners}
+      onClick={handleClickCard}
       sx={{
         cursor:'pointer',
         boxShadow: '0 1px 1px rgba(0,0,0,0.2)',

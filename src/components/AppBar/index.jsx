@@ -29,11 +29,13 @@ import FormControlLabel from '@mui/material/FormControlLabel'
 import { createNewBoardAPI, getAllBoardsAPI } from '~/apis/board'
 import { useNavigate } from 'react-router-dom'
 import { useDispatch } from 'react-redux'
+import Loading from '../Loading/Loading'
 
 
 function AppBar() {
   const navigate = useNavigate()
   const dispatch = useDispatch()
+  const [isLoading, setIsLoading] = useState(false)
   const [searchValue, setSearchValue] = useState('')
   const [openDiaLogCreateBoard, setOpenDiaLogCreateBoardpen] = useState(false)
   const [typeBoard, setTypeBoard] = useState('public')
@@ -55,11 +57,11 @@ function AppBar() {
       description: newDescriptionBoard,
       type: typeBoard,
     }
-    createNewBoardAPI(newBoard, navigate, dispatch)
+    createNewBoardAPI(newBoard, navigate, dispatch, setIsLoading)
   }
   const handleGoToHome = () => {
     navigate('/')
-    getAllBoardsAPI(dispatch)
+    getAllBoardsAPI(dispatch, setIsLoading)
   }
 
   return (
@@ -159,6 +161,7 @@ function AppBar() {
           <Button type="submit" >Create</Button>
         </DialogActions>
       </Dialog>
+      <Loading open={isLoading} />
     </Box>
   )
 }

@@ -19,13 +19,15 @@ import TextField from '@mui/material/TextField'
 import { useState } from 'react'
 import { inviteMemberAPI } from '~/apis/invitation'
 import { useSelector } from 'react-redux'
+import Loading from '~/components/Loading/Loading'
 
 
 function BoardBar() {
-
+  const [isLoading, setIsLoading] = useState(false)
   const [openDiaLogInviteMember, setOpenDiaLogInviteMember] = useState(false)
   const [email, setEmail] = useState('')
   const board = (useSelector((state) => state.board.board.board))
+  const user = useSelector((state) => state.auth.login.currentUser)
 
   const inviteMember = () => {
     setOpenDiaLogInviteMember(true)
@@ -42,7 +44,7 @@ function BoardBar() {
       boardId: board._id,
       email,
     }
-    inviteMemberAPI(data)
+    inviteMemberAPI(data, setIsLoading)
     setEmail('')
     handleClose()
   }
@@ -62,7 +64,7 @@ function BoardBar() {
         <Tooltip title={board?.description}>
           <Chip
             sx={{}}
-            avatar={<Avatar alt="Natacha" src='https://scontent.fsgn2-8.fna.fbcdn.net/v/t39.30808-6/324591512_1312799499497815_4509213548081146860_n.jpg?_nc_cat=102&ccb=1-7&_nc_sid=5f2048&_nc_eui2=AeHxw31PKwrgSslZZ2Qdzovzb6ypziWItc1vrKnOJYi1zSQ_Scv0M4oPXA5nhPRHcPRxoZK-RDh2F_1Za0aqgYQv&_nc_ohc=ZNvCY9yGsa8AX8WNCU6&_nc_ht=scontent.fsgn2-8.fna&oh=00_AfB5JBNDZxQdAPilzgABSs5oLHy7UoZ3z98TvAK57mih9Q&oe=65403728'
+            avatar={<Avatar alt="Natacha" src={user.avatar}
             />}
             label={board?.title}
             clickable
@@ -112,6 +114,7 @@ function BoardBar() {
           {board.members.map((member) => <Tooltip key={member._id} title={member.displayName }>
             <Avatar alt="Remy Sharp" src="/static/images/avatar/1.jpg" />
           </Tooltip>)}
+
         </AvatarGroup>
       </Box>
 
@@ -140,6 +143,7 @@ function BoardBar() {
           <Button type="submit" >Invite</Button>
         </DialogActions>
       </Dialog>
+      <Loading open={isLoading} />
     </Box>
   )
 }

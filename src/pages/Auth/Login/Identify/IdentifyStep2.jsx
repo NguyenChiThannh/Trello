@@ -25,26 +25,16 @@ function IdentifyStep2() {
 
   const handleSendCodeToEmail = (e) => {
     e.preventDefault()
+
     setOpenDialogOTP(true)
+
     sendOTP(email)
-
-
-    // Gọi API đăng nhập với email và password
-
-    // Sau khi nhận được phản hồi từ API:
-
-    // Xử lý kết quả đăng nhập (thành công/thất bại)
   }
   const handleSendCodeToTelephoneNumber = (e) => {
     e.preventDefault()
     setOpenDialogTelephoneNumber(false)
     console.log(telephoneNumber)
     setTelephoneNumber('')
-    // Gọi API đăng nhập với email và password
-
-    // Sau khi nhận được phản hồi từ API:
-
-    // Xử lý kết quả đăng nhập (thành công/thất bại)
   }
   return (
     <Box sx={{
@@ -62,7 +52,6 @@ function IdentifyStep2() {
           borderRadius: '1rem',
           display: 'flex',
           alignItems: 'center',
-          // eslint-disable-next-line quotes
           boxShadow: `${colorBoxShadow} 0px 1px 0px, ${colorBoxShadow} 0px 0px 8px`,
         }}
       >

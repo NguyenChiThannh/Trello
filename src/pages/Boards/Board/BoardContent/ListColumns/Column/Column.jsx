@@ -30,6 +30,7 @@ import { getBoardDetailAPI } from '~/apis/board'
 import { useNavigate } from 'react-router-dom'
 import { createNewCardAPI } from '~/apis/card'
 import { deleteColumnDetailsAPI } from '~/apis/column'
+import Loading from '~/components/Loading/Loading'
 
 function Column({ column }) {
   // drag
@@ -60,6 +61,7 @@ function Column({ column }) {
   const orderedCards = mapOrder(column?.cards, column?.cardOrderIds, '_id')
   const navigate = useNavigate()
   const dispatch = useDispatch()
+  const [isLoading, setIsLoading] = useState(false)
   const [openNewCardForm, setOpenNewCardForm] = useState(false)
   const toggleOpenNewCardForm = () => setOpenNewCardForm(!openNewCardForm)
   const [newCardTitle, setNewCardTitle] = useState('')
@@ -71,14 +73,12 @@ function Column({ column }) {
       ...newCardData,
       boardId : board._id
     })
-    getBoardDetailAPI(board._id, dispatch, navigate)
+    getBoardDetailAPI(board._id, dispatch, navigate, setIsLoading)
   }
 
   const deleteColumnDetails = async (columnId) => {
-    deleteColumnDetailsAPI(columnId).then(() => {
-      toast.success('Delete Column Success')
-    })
-    getBoardDetailAPI(board._id, dispatch, navigate)
+    await deleteColumnDetailsAPI(columnId, column.boardId)
+    getBoardDetailAPI(board._id, dispatch, navigate, setIsLoading)
   }
 
   const addNewCard = async () => {
@@ -92,7 +92,7 @@ function Column({ column }) {
       columnId: column._id
     }
     await createNewCard(newCardData)
-    getBoardDetailAPI(board._id, dispatch, navigate)
+    getBoardDetailAPI(board._id, dispatch, navigate, setIsLoading)
 
     //Đóng trạng thái thêm column và clear input
     toggleOpenNewCardForm()
@@ -128,7 +128,7 @@ function Column({ column }) {
           ml: 2,
           borderRadius: '6px',
           height: 'fit-content',
-          maxHeight: (theme) => `calc(${theme.trello.boardContentHeight} - ${theme.spacing(5)})`
+          maxHeight: (theme) => `calc(100% - ${theme.spacing(5)} + 10px`
 
         }}>
         {/* Box Header */}
@@ -269,6 +269,7 @@ function Column({ column }) {
           </Box>
         }
       </Box>
+      <Loading open={isLoading} />
     </div>
   )
 }

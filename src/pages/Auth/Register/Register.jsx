@@ -21,8 +21,9 @@ import { useColorScheme } from '@mui/material'
 
 
 import Box from '@mui/material/Box'
-import { registerUser } from '~/apis/auth'
+import { registerUserAPI } from '~/apis/auth'
 import { API_ROOT } from '~/utils/constants'
+import Loading from '~/components/Loading/Loading'
 
 function Register() {
   const [email, setEmail] = useState('')
@@ -64,23 +65,15 @@ function Register() {
     setFormError({
       email:!email,
       emailType: !validateEmail(email),
-      password: !password,
+      password: !password || !password.match(/^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@$!%*?&.])[A-Za-z\d@$!%*?&.]{6,30}$/),
       repeatPassword: newUser.password !== newUser.repeatPassword,
     })
     if (newUser.password === newUser.repeatPassword) {
-      registerUser({
+      registerUserAPI({
         email: newUser.email,
         password: newUser.password,
-      })
+      }, setIsLoading)
     }
-    setIsLoading(true)
-
-    // Gọi API đăng nhập với username và password
-
-    // Sau khi nhận được phản hồi từ API:
-    setIsLoading(false)
-
-    // Xử lý kết quả đăng nhập (thành công/thất bại)
   }
   return (
     <Box sx={{
@@ -92,14 +85,12 @@ function Register() {
     }}>
       <Box
         sx={{
-          // backgroundColor: 'blue',
           width: '25%',
           margin: '0 auto',
           padding: '2rem',
           borderRadius: '1rem',
           display: 'flex',
           alignItems: 'center',
-          // eslint-disable-next-line quotes
           boxShadow: `${colorBoxShadow} 0px 1px 0px, ${colorBoxShadow} 0px 0px 8px`,
         }}
       >
@@ -175,11 +166,9 @@ function Register() {
               color="primary"
               type="submit"
               fullWidth
-              disabled={isLoading}
               sx={{ mt: 3 }}
             >
             Sign up
-              {isLoading && <CircularProgress size={24} sx={{ ml: 1 }} />}
             </Button>
             <Box sx={{ mt: 2, textAlign: 'center', color: 'white' }}>
               <Link href="/login/identify">Forgot password?</Link>
@@ -198,6 +187,7 @@ function Register() {
           </Box>
         </Box>
       </Box>
+      <Loading open={isLoading} />
     </Box>
   )
 }

@@ -1,7 +1,5 @@
 import { useEffect, useState } from 'react'
 import Box from '@mui/material/Box'
-import { io } from 'socket.io-client'
-import { API_ROOT } from '~/utils/constants'
 import FormControl from '@mui/material/FormControl'
 import OutlinedInput from '@mui/material/OutlinedInput'
 import Badge from '@mui/material/Badge'
@@ -10,62 +8,44 @@ import Typography from '@mui/material/Typography'
 import SendIcon from '@mui/icons-material/Send'
 import CloseIcon from '@mui/icons-material/Close'
 import IconButton from '@mui/material/IconButton'
-import { Padding } from '@mui/icons-material'
 import Messages from './Messages/Messages'
 import { useSelector } from 'react-redux'
+import useSendMessage from '~/customHooks/useSendMessage'
+import useGetMessages from '~/customHooks/useGetMessages'
+import useListenMessages from '~/customHooks/useListenMessages'
 
 
-function ChatBox({ open, receiverId }) {
+function ChatBox({ open, receiverId, onToggle }) {
   const [newMessage, setNewMessage] = useState()
-  const [openChatBox, setOpenChatBox] = useState(open ? 'block' : 'none')
   const board = (useSelector((state) => state.board.board.board))
-  const receiverInfo = board.user[0]
-  const findMemberInBoard = (members, receiverId) => {
-    for (let i = 0; i < members.length; i++) {
-      if (members[i]._id == receiverId) {
-        return members[i]
-      }
-    }
-    // Nếu không tìm thấy đối tượng nào có id trùng khớp, trả về null
-    return null
-  }
-  // console.log('🚀 ~ ChatBox ~ receiverInfo:', receiverInfo)
-  const senderInfo = findMemberInBoard(board.members, receiverId)
-  // console.log('🚀 ~ ChatBox ~ senderInfo:', senderInfo)
-  const socket = io(API_ROOT)
+  const { sendMessage } = useSendMessage()
+  const { getMessage, loading } = useGetMessages()
+
+  useListenMessages()
+
+  useEffect(() => {
+    getMessage(board._id, receiverId)
+  }, [])
+
   const handleSendNewMessage = (e) => {
     e.preventDefault()
-    console.log('Code chay vao day')
-    console.log('🚀 ~ handleSendNewMessage ~ newMessage:', newMessage)
-    socket.emit('message', newMessage)
-    setNewMessage('')
+    if (newMessage) {
+      const message = {
+        message: newMessage
+      }
+      sendMessage(message, board._id, receiverId)
+      setNewMessage('')
+    }
   }
 
   const handleCloseChatBox =() => {
-    open = false
+    // setOpenChatBox(false)
+    onToggle(false)
   }
 
-  useEffect(() => {
-    board
-    receiverId
-  }, [receiverId])
-  // useEffect(() => {
-  //   socket.on('connect', () => {
-  //     console.log('connected')
-  //     console.log('🚀 ~ socket.on ~ socket:', socket.id)
-  //   })
-  //   socket.on('welcome', (s) => {
-  //     console.log(s)
-  //   })
-  //   socket.on('receive-message', (data) => {
-  //     console.log('🚀 ~ socket.on ~ data:', data)
-  //   })
-  //   return () => {
-  //     socket.disconnect()
-  //   }
-  // }, [])
-
-
+  if (loading) {
+    return null
+  }
   return (
     <Box sx={{
       position: 'fixed',

@@ -24,10 +24,12 @@ import { useSelector } from 'react-redux'
 import { getAllBoardsAPI, getBoardDetailAPI } from '~/apis/board'
 import { useDispatch } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
+import Loading from '~/components/Loading/Loading'
 
 function BoardList() {
   const navigate = useNavigate()
   const dispatch = useDispatch()
+  const [isLoading, setIsLoading] = useState(false)
   const [selectedIndex, setSelectedIndex] =useState(1)
   const [currentPage, setCurrentPage] = useState(1)
   const boards = (useSelector((state) => state.board.board.boards))
@@ -46,17 +48,17 @@ function BoardList() {
     const queryParams = new URLSearchParams(window.location.search)
     queryParams.set('page', page)
     navigate(`?${queryParams.toString()}`)
-    getAllBoardsAPI(dispatch, page)
+    getAllBoardsAPI(dispatch, page, setIsLoading)
   }
   useEffect(() => {
     const searchParams = new URLSearchParams(window.location.search)
     const page = searchParams.get('page')
     setCurrentPage(page || 1)
-    getAllBoardsAPI(dispatch, page || 1)
+    getAllBoardsAPI(dispatch, page || 1, setIsLoading)
   }, [])
 
   const handleClickBoard = (boardId) => {
-    getBoardDetailAPI(boardId, dispatch, navigate)
+    getBoardDetailAPI(boardId, dispatch, navigate, setIsLoading)
   }
   return (
     <Container disableGutters maxWidth={true} sx={{ height:'100%' }}>
@@ -141,6 +143,7 @@ function BoardList() {
             </List>
           </Box>
         </Grid>
+
         {/* Content Area */}
         <Grid xs={9} spacing={3}>
           <Typography variant="h4" fontWeight={'bold'} color={'primary'}>
@@ -182,6 +185,7 @@ function BoardList() {
 
         </Grid>
       </Grid>
+      <Loading open={isLoading} />
     </Container>
   )
 }

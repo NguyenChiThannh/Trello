@@ -1,8 +1,9 @@
 import Box from '@mui/material/Box'
 import Avatar from '@mui/material/Avatar'
 import Typography from '@mui/material/Typography'
+import { timeAgo } from '~/utils/formatters'
 
-function ReceivedMessage() {
+function ReceivedMessage(props) {
   return (
     <Box sx={{
       display: 'flex',
@@ -19,8 +20,8 @@ function ReceivedMessage() {
         paddingY: '6px',
         borderRadius:'16px',
         maxWidth: '60%',
-      }}>Nội dung
-        <Typography variant="span" sx={{ fontSize:'10px', display: 'block' }}>2 minute ago</Typography></Box>
+      }}>{props.message}
+        <Typography variant="span" sx={{ fontSize:'10px', display: 'block' }}>{timeAgo(props.time)}</Typography></Box>
 
     </Box>
   )

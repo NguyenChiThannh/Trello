@@ -23,7 +23,6 @@ function Identify() {
   }
   return (
     <Box sx={{
-      // backgroundColor: (theme) => theme.palette.secondary.main,
       width: '100%',
       height: '100vh',
       display: 'flex',
@@ -32,14 +31,11 @@ function Identify() {
 
       <Box
         sx={{
-          // bgcolor: mode =='light' ? 'white' : 'black',
-          // width: '25%',
           margin: '0 auto',
           padding: '2rem',
           borderRadius: '1rem',
           display: 'flex',
           alignItems: 'center',
-          // eslint-disable-next-line quotes
           boxShadow: `${colorBoxShadow} 0px 1px 0px, ${colorBoxShadow} 0px 0px 8px`,
         }}
       >
