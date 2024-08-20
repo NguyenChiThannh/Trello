@@ -20,24 +20,21 @@ axiosInstance.interceptors.response.use(
     const err = error.response?.data?.message
     const originalRequest = error.config
 
-    if (error.response && error.response.status === 401 && !originalRequest._retry) {
+    if (error.response && error.response.status === 401 && !originalRequest._retry && err === 'jwt expired') {
       originalRequest._retry = true
 
       try {
         await requestTokenAPI()
         return axiosInstance(originalRequest)
       } catch (refreshError) {
-        // Nếu lỗi khi request token là 403, thực hiện logout
-        if (refreshError.response && refreshError.response.status === 403) {
-          toast.error('Please log in again.')
-          localStorage.clear()
-          window.location.href = '/'
-        } else {
-          toast.error('Token refresh failed')
-        }
+        localStorage.clear()
+        window.location.href = '/'
+        toast.error('Please log in again.')
       }
     } else {
-      toast.error(err)
+      localStorage.clear()
+      location.href = '/'
+      toast.error('Please log in again.')
     }
 
     return Promise.reject(error)
