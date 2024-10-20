@@ -25,12 +25,13 @@ import { getAllBoardsAPI, getBoardDetailAPI } from '~/apis/board'
 import { useDispatch } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
 import Loading from '~/components/Loading/Loading'
+import { axiosInstance } from '~/apis/config'
 
 function BoardList() {
   const navigate = useNavigate()
   const dispatch = useDispatch()
   const [isLoading, setIsLoading] = useState(false)
-  const [selectedIndex, setSelectedIndex] =useState(1)
+  const [selectedIndex, setSelectedIndex] = useState(1)
   const [currentPage, setCurrentPage] = useState(1)
   const boards = (useSelector((state) => state.board.board.boards))
   const countBoards = (useSelector((state) => state.board.board.count))
@@ -57,12 +58,20 @@ function BoardList() {
     getAllBoardsAPI(dispatch, page || 1, setIsLoading)
   }, [])
 
+  useEffect(async () => {
+    await axiosInstance.get('/v1/boards/?page=1')
+  }, [])
+
+  useEffect(async () => {
+    await axiosInstance.get('/v1/boards/?page=1')
+  }, [])
+
   const handleClickBoard = (boardId) => {
     getBoardDetailAPI(boardId, dispatch, navigate, setIsLoading)
   }
   return (
-    <Container disableGutters maxWidth={true} sx={{ height:'100%' }}>
-      <AppBar/>
+    <Container disableGutters maxWidth={true} sx={{ height: '100%' }}>
+      <AppBar />
       {/* Board Detail */}
       <Grid container spacing={2} mx={6} mt={2} >
         {/* Left Bar */}
@@ -74,7 +83,7 @@ function BoardList() {
                 onClick={(event) => handleListItemClick(event, 0)}
               >
                 <ListItemIcon>
-                  <DashboardIcon/>
+                  <DashboardIcon />
                 </ListItemIcon>
                 <ListItemText primary="Board" />
               </ListItemButton>
@@ -83,7 +92,7 @@ function BoardList() {
                 onClick={(event) => handleClick(event, 1)}
               >
                 <ListItemIcon>
-                  <BackupTableIcon/>
+                  <BackupTableIcon />
                 </ListItemIcon>
                 <ListItemText primary="Templete" />
               </ListItemButton>
@@ -150,7 +159,7 @@ function BoardList() {
             Your Board:
           </Typography>
           <Box padding={0} mt={1}>
-            <Grid container xs={12} sx={{ width: '100%', display:'flex' }} spacing={2} padding={0}>
+            <Grid container xs={12} sx={{ width: '100%', display: 'flex' }} spacing={2} padding={0}>
               {boards?.map(board =>
                 <Grid xs={3} key={board._id}>
                   <Card onClick={() => handleClickBoard(board._id)}>
@@ -158,13 +167,13 @@ function BoardList() {
                       <CardMedia
                         component="img"
                         height="100"
-                        image= {board.background}
+                        image={board.background}
                       />
                       <CardContent>
-                        <Typography gutterBottom variant="h5" component="div" sx={{ display:'flex', overflow: 'hidden', height: '35px' }}>
+                        <Typography gutterBottom variant="h5" component="div" sx={{ display: 'flex', overflow: 'hidden', height: '35px' }}>
                           {board.title}
                         </Typography>
-                        <Typography variant="text" color="text.secondary" sx={{ display:'flex', overflow: 'hidden', height: '32px', width:'216px' }}>
+                        <Typography variant="text" color="text.secondary" sx={{ display: 'flex', overflow: 'hidden', height: '32px', width: '216px' }}>
                           {board.description}
                         </Typography>
                       </CardContent>
@@ -180,7 +189,7 @@ function BoardList() {
 
           </Box>
           <Box style={{ display: 'flex', justifyContent: 'flex-end' }} mt={3}>
-            <Pagination count={Math.ceil(countBoards/8)} color="primary" onChange={handleChangePage} page={parseInt(currentPage)}/>
+            <Pagination count={Math.ceil(countBoards / 8)} color="primary" onChange={handleChangePage} page={parseInt(currentPage)} />
           </Box>
 
         </Grid>

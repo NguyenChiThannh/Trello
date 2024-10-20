@@ -57,7 +57,7 @@ export const getBoardDetailAPI = async (boardId, dispatch, navigate, setIsLoadin
       dispatch(getBoardDetailSuccess(board))
     }
   } catch (error) {
-  // Error handling is already done in the interceptor
+    // Error handling is already done in the interceptor
   } finally {
     setIsLoading(false)
   }
